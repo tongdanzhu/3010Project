@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Sweet</string>
+    <string name="enter_house_id">enter house id</string>
+    <string name="temperature">temperature</string>
+    <string name="light">light</string>
+    <string name="mailbox">mailbox</string>
+    <string name="doorbell">doorbell</string>
+    <string name="houseid">house id</string>
+    <string name="currenthouse">Current House: </string>
+    <string name="currentLightState">Current Light State</string>
+    <string name="currentThreshold">Current Threshold</string>
+    <string name="setThreshold">Set Threshold</string>
+</resources>
