@@ -7,7 +7,7 @@
     tools:context=".house">
 
     <EditText
-        android:id="@+id/et_house_id"
+        android:id="@+id/et_set_threshold"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginTop="10dp"

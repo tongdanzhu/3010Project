@@ -7,7 +7,9 @@
     <string name="doorbell">doorbell</string>
     <string name="houseid">house id</string>
     <string name="currenthouse">Current House: </string>
-    <string name="currentLightState">Current Light State</string>
-    <string name="currentThreshold">Current Threshold</string>
+    <string name="currentLightState">Current Light State: </string>
+    <string name="currentThreshold">Current Threshold: </string>
     <string name="setThreshold">Set Threshold</string>
+    <string name="thresholdRange">Update Threshold (0C-40C): </string>
+    <string name="manualControlLight">Manual Control Light</string>
 </resources>

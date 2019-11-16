@@ -22,7 +22,7 @@ public class house extends AppCompatActivity {
         setContentView(R.layout.house);
 
         bt_enter_house_id = (Button) findViewById(R.id.bt_enter_house_id);
-        et_house_id = (EditText) findViewById(R.id.et_house_id);
+        et_house_id = (EditText) findViewById(R.id.et_set_threshold);
 
 
         et_house_id.addTextChangedListener(new TextWatcher() {
