@@ -64,7 +64,7 @@ public class temperature extends AppCompatActivity {
         });
 
         //display current threshold
-        tv_threshold.setText(temp.getThreshold()+"");
+        //tv_threshold.setText(temp.getThreshold()+"");
 
         //button listener for updating the threshold
         bt_set_threshold.setOnClickListener(new View.OnClickListener() {
