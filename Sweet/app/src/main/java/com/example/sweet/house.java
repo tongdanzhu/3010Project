@@ -25,10 +25,7 @@ public class house extends AppCompatActivity {
 
     private EditText et_house_id;
     private Button bt_enter_house_id;
-    Socket myAppSocket =null;
-    public static String wifiModuleIp="172.20.10.3";
-    public static int wifiModulePort=21567;
-    public static String CMD="0";
+    private EditText et_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +33,8 @@ public class house extends AppCompatActivity {
         setContentView(R.layout.house);
 
         bt_enter_house_id = (Button) findViewById(R.id.bt_enter_house_id);
-        et_house_id = (EditText) findViewById(R.id.et_set_threshold);
+        et_house_id = (EditText) findViewById(R.id.et_house_id);
+        et_password =(EditText) findViewById(R.id.et_password);
 
 
         et_house_id.addTextChangedListener(new TextWatcher() {
@@ -64,7 +62,8 @@ public class house extends AppCompatActivity {
         bt_enter_house_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(house_id_validation(et_house_id.getText().toString()))
+                if(house_id_validation(et_house_id.getText().toString())
+                        && password_validation(et_house_id.getText().toString(),et_password.getText().toString()))//if the house id is exist in database
                 {
                     Intent intent = new Intent(house.this, house_activity.class);
                     intent.putExtra("house_id", et_house_id.getText().toString());
@@ -82,19 +81,28 @@ public class house extends AppCompatActivity {
     }
 
 
-
+    //connect to database to check where the house_id is in exist
     public boolean house_id_validation(String house_id){
-        //connect to database to check where the house_id is in exist
         String command=1+":"+house_id;
-        //udpSender udpSender = new udpSender();
-        //udpSender.send(command);
-        //toast(house_id);
-        if(house_id.length()==0 || house_id.equals("2") )
+        udpSender udpSender = new udpSender();
+        //toast(command);
+        if( udpSender.checkValidationHouseID(command))
         {
-
             return false;
         }
         return true;
+    }
+
+    //check whether the combination of house id and password is correct
+    public boolean password_validation(String house_id, String password){
+        if(house_id.equals("1")&& password.equals("11"))
+        {
+            return true;}
+        else {
+            toast("password is incorrect");
+            return false;
+
+        }
     }
 
 
