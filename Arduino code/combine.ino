@@ -1,3 +1,6 @@
+//This is combination of all the sensors.
+//It will output the needed sensed values.
+
 #include "dht11.h"
 #define DHT11PIN 4
 #include <Stepper.h>
