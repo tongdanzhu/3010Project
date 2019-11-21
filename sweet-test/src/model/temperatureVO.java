@@ -1,24 +1,26 @@
 package model;
 
 public class temperatureVO {
-	private int dataID;
-	private int roomID;
+	private int houseID;
+	private double threshold;
+	public double getThreshold() {
+		return threshold;
+	}
+	public void setThreshold(double threshold) {
+		this.threshold = threshold;
+	}
 	private String currDate;
 	private String currTime;
-	private int currTemp;
+	private double currTemp;
 	private boolean fanState;
-	public int getDataID() {
-		return dataID;
+	
+	public int getHouseID() {
+		return houseID;
 	}
-	public void setDataID(int dataID) {
-		this.dataID = dataID;
+	public void setHouseID(int houseID) {
+		this.houseID = houseID;
 	}
-	public int getRoomID() {
-		return roomID;
-	}
-	public void setRoomID(int roomID) {
-		this.roomID = roomID;
-	}
+	
 	public String getCurrDate() {
 		return currDate;
 	}
@@ -31,10 +33,10 @@ public class temperatureVO {
 	public void setCurrTime(String currTime) {
 		this.currTime = currTime;
 	}
-	public int getCurrTemp() {
+	public double getCurrTemp() {
 		return currTemp;
 	}
-	public void setCurrTemp(int currTemp) {
+	public void setCurrTemp(double currTemp) {
 		this.currTemp = currTemp;
 	}
 	public boolean isFanState() {

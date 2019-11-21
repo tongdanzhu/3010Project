@@ -34,6 +34,8 @@ public class test_cases {
 	private static final String UPDATE_VISITOR = "UPDATE visitor SET confirm =1 WHERE visitorID =? and houseID=? and confirm =0";
 	// list history visitors
 	private static final String GET_ALL_VISITORS = "SELECT * FROM visitor WHERE houseID=?";
+	// get threshold
+	private static final String GET_TEMPERATURE="SELECT * FROM temperature WHERE houseID=?";
 	
 	// initial connection
 	private static Connection conn = MyConnection.getConnect();
@@ -242,6 +244,26 @@ public class test_cases {
 			visitors.add(visitor);
 		}
 		return visitors;
+	}
+	
+	public static double getThreshold(int houseID) throws SQLException {
+		temperatureVO temperature=null;
+		PreparedStatement pstmt = conn.prepareStatement(GET_TEMPERATURE);
+		List<temperatureVO> temperatures = new ArrayList<temperatureVO>();
+		pstmt.setInt(1, houseID);
+		ResultSet rs =  pstmt.executeQuery();
+		while (rs.next()) {
+			temperature = new temperatureVO();
+			temperature.setHouseID(rs.getInt("houseID"));
+			
+			temperature.setThreshold(rs.getDouble("threshold"));
+			temperature.setCurrTemp(rs.getDouble("currTemp"));
+			temperature.setCurrDate(rs.getString("currDate"));
+			temperature.setCurrTime(rs.getString("currTime"));
+			temperature.setFanState(rs.getBoolean("fanState"));
+			temperatures.add(temperature);
+		}
+		return temperature.getThreshold();
 	}
 
 }
