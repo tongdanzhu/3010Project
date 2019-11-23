@@ -70,8 +70,9 @@ public class temperature extends AppCompatActivity {
         bt_set_threshold.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String setThreshold=et_set_threshold.getText().toString();
 
-                if(!isThresholdValid(et_set_threshold.getText().toString())){//if the threshold is not valid
+                if(!isThresholdValid(setThreshold) || !isThresholdisDigit(setThreshold)){//if the threshold is not valid
                     toast("the threshold must be in range of 0C to 40C");
                     bt_set_threshold.setEnabled(Boolean.FALSE);
                 }
@@ -87,14 +88,23 @@ public class temperature extends AppCompatActivity {
 
     }
 
+    public boolean isThresholdisDigit(String threshold){
+        for (int i = 0; i < threshold.length(); i++) {
+            if (!Character.isDigit(threshold.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     // check the validation of threshold in range from 0(C) to 40 (C)
     public  boolean isThresholdValid (String threshold){
         //toast(threshold.length()+"")
         double d_threshold = Double.valueOf(threshold);
-        if (d_threshold<=0 || d_threshold>=40){
+        if (d_threshold<=0 || d_threshold>40){
             return false;
         }
-
         return true;
     }
 

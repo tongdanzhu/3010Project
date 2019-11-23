@@ -25,14 +25,19 @@ public class light extends AppCompatActivity {
         light.setLightState(false);
 
         tv_light_state = (TextView) findViewById(R.id.tv_light_state);
+        //toggle button of turn on or off the light manually
+        tbt_manual_control = (ToggleButton) findViewById(R.id.tbt_manual_control);
+        //switch of manual controller of light
+        sw_manual_control = (Switch) findViewById(R.id.sw_manual_control);
+
+
         if(light.isLightState()){
             tv_light_state.setText("Light is ON");}
         else{
             tv_light_state.setText("Light if OFF");
         }
 
-        //switch of manual controller of light
-        sw_manual_control = (Switch) findViewById(R.id.sw_manual_control);
+
         sw_manual_control.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -48,9 +53,6 @@ public class light extends AppCompatActivity {
             }
         });
 
-
-        //toggle button of turn on or off the light manually
-        tbt_manual_control = (ToggleButton) findViewById(R.id.tbt_manual_control);
 
         tbt_manual_control.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

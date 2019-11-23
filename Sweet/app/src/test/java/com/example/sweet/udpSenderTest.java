@@ -2,14 +2,20 @@ package com.example.sweet;
 
 import org.junit.Test;
 
+import java.util.concurrent.TimeoutException;
+
 import static org.junit.Assert.*;
 
 public class udpSenderTest {
 
-    udpSender sender= new udpSender();
-    @Test
-    public void send() {
+    udpSender sender = new udpSender();
 
-        assertEquals(true,sender.checkValidationHouseID("jit"));
+    @Test
+    public void checkValidationHouseID() {
+
+
+
+            assertEquals(true, sender.checkValidationHouseID("jit"));
+
     }
 }
