@@ -62,8 +62,7 @@ public class house extends AppCompatActivity {
         bt_enter_house_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(house_id_validation(et_house_id.getText().toString())
-                        && password_validation(et_house_id.getText().toString(),et_password.getText().toString()))//if the house id is exist in database
+                if(password_validation(et_house_id.getText().toString(),et_password.getText().toString()))//if the house id is exist in database
                 {
                     Intent intent = new Intent(house.this, house_activity.class);
                     intent.putExtra("house_id", et_house_id.getText().toString());
@@ -82,17 +81,17 @@ public class house extends AppCompatActivity {
 
 
     //connect to database to check where the house_id is in exist
-    public boolean house_id_validation(String house_id){
+   /* public boolean house_id_validation(String house_id){
         String command=1+":"+house_id;
         udpSender udpSender = new udpSender();
         //toast(command);
-        if( udpSender.checkValidationHouseID(command))
+        if( udpSender.SendMsg(command))
         {
             return false;
         }
         return true;
     }
-
+*/
     //check whether the combination of house id and password is correct
     public boolean password_validation(String house_id, String password){
         if(house_id.equals("1")&& password.equals("11"))

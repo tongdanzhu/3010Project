@@ -10,6 +10,6 @@ public class udpSenderTest {
     @Test
     public void send() {
 
-        assertEquals(true,sender.checkValidationHouseID("jit"));
+        assertEquals("20",sender.SendMsg("i need a string value."));
     }
 }

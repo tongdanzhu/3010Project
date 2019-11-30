@@ -9,7 +9,7 @@ import java.net.InetAddress;
 public class udpSender {
     private final static int PACKETSIZE = 1000 ;
     private InetAddress host;
-    private String ip = "172.20.10.5";
+    private String ip = "192.168.0.19";
     private int port = 8688;
     int counter = 1;
 
@@ -21,7 +21,7 @@ public class udpSender {
 
     }
 
-    
+
     //Send a msg to get a string or int value
     //to convert string to int: Integer.parseInt(str);
     public String SendMsg(String s)
