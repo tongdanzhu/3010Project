@@ -43,7 +43,13 @@ public class temperatureVO {
         int minute = calendar.get(Calendar.MINUTE);
         int second = calendar.get(Calendar.SECOND);
         this.currTime= hour+":"+minute+":"+second;
+    }
 
+    public void setFanState(boolean fanState){
+        this.fanState=fanState;
+    }
+    public boolean isFanState(){
+        return this.fanState;
     }
 
     public String getCurrDate(){

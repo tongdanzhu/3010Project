@@ -13,4 +13,5 @@
     <string name="thresholdRange">Update Threshold (0C-40C): </string>
     <string name="manualControlLight">Manual Control Light</string>
     <string name="sweetHome">Sweet Home</string>
+
 </resources>

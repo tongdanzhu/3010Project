@@ -5,18 +5,30 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyConnection {
+    /*
+        mysql statements
+     */
     // check whether the combination of house id and password are correct
     private static final String USER_VALIDATION = "SELECT * FROM user WHERE houseID=? and password=?";
     // check whether the house id exists in database
     private static final String USER_EXIST = "SELECT * FROM user WHERE houseID=?";
     // get current mailbox state
-    private static final String GET_MAILBOX_STATE = "SELECT mailboxState FROM house WHERE houseID=?";
+    private static final String GET_MAILBOX_STATE = "SELECT mailboxState FROM user WHERE houseID=?";
+    // check whether the threshold exist
+    private static final String THRESHOLD_EXIST = "SELECT threshold FROM temperatureControl WHERE houseID=?";
+    // update threshold
+    private static final String UPDATE_THRESHOLD = "UPDATE temperatureControl SET threshold =? WHERE houseID =?";
+    // get threshold
+    private static final String GET_THRESHOLD="SELECT * FROM temperatureControl WHERE houseID=?";
 
 
     private static Connection conn = null;
 
+    // establish connection to database in raspberry bi
     public static Connection getConnection() {
 
         if (conn == null) {
@@ -33,7 +45,7 @@ public class MyConnection {
                 System.out.println(user);
                 System.out.println(password);
                 System.out.println("Connection made!");
-                System.out.println("Schema Name:"+conn.isValid(20)+"\n");
+                System.out.println("Schema Name:" + conn.isValid(20) + "\n");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -42,6 +54,43 @@ public class MyConnection {
         return conn;
     }
 
+   /* public static double getThreshold(int houseID) throws SQLException {
+        temperatureVO temperature=null;
+        PreparedStatement pstmt = conn.prepareStatement(GET_TEMPERATURE);
+        List<temperatureVO> temperatures = new ArrayList<temperatureVO>();
+        pstmt.setInt(1, houseID);
+        ResultSet rs =  pstmt.executeQuery();
+        while (rs.next()) {
+            temperature = new temperatureVO();
+            temperature.setHouseID(rs.getInt("houseID"));
+
+            temperature.setThreshold(rs.getDouble("threshold"));
+            temperature.setCurrTemp(rs.getDouble("currTemp"));
+            temperature.setCurrDate(rs.getString("currDate").toString());
+            temperature.setCurrTime(rs.getString("currTime"));
+            temperature.setFanState(rs.getBoolean("fanState"));
+            temperatures.add(temperature);
+        }
+        return temperature.getThreshold();
+    }
+*/
+    /*
+        search the database whether the threshold exists or not for a certain houseID
+     */
+    public boolean isThresholdExist(int houseID) throws SQLException {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(THRESHOLD_EXIST);
+        pstmt.setInt(1, houseID);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+        search the database for whether the houseID is exist or not
+     */
     public boolean userExist(int houseID) throws SQLException {
         Connection conn = getConnection();
 
@@ -56,6 +105,9 @@ public class MyConnection {
         return false;
     }
 
+    /*
+        search the database whether the password and houseID are correct or not
+     */
     public boolean password_validation(String houseID, String password) throws SQLException {
         Connection conn = getConnection();
         PreparedStatement pstmt = conn.prepareStatement(USER_VALIDATION);
@@ -71,7 +123,10 @@ public class MyConnection {
         }
         return false;
     }
-    // get current mailbox state
+
+    /*
+        get current mailbox state
+     */
     public boolean getMailboxState(int houseID) throws SQLException {
         PreparedStatement pstmt = conn.prepareStatement(GET_MAILBOX_STATE);
         pstmt.setInt(1, houseID);
@@ -87,7 +142,6 @@ public class MyConnection {
         }
 
     }
-
 
 
 }

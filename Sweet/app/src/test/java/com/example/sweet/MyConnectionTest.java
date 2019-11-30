@@ -46,6 +46,13 @@ public class MyConnectionTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        try {
+            //text case for incorrect password
+            assertEquals(false, con.password_validation("2", "13433"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         try {
             //text case for incorrect password
             assertEquals(false, con.password_validation("135", "2"));
@@ -64,6 +71,20 @@ public class MyConnectionTest {
         }
         try {
             assertEquals(false,con.getMailboxState(2));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void Test_threshold_exist(){
+        try {
+            assertEquals(true,con.isThresholdExist(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            assertEquals(false,con.isThresholdExist(2));
         } catch (SQLException e) {
             e.printStackTrace();
         }
