@@ -6,36 +6,54 @@ public class houseVO {
     private boolean mailboxState;
     private boolean doorbellState;
     private double currDarkness;
+    private boolean houseIDExist;
 
-    public void setHouseID(int houseID)
-    {
-        this.houseID=houseID;
+    public void setHouseID(int houseID) {
+        this.houseID = houseID;
     }
-    public int getHouseID(){
+
+    public int getHouseID() {
         return this.houseID;
     }
-    public void setHouseAddress(String houseAddress){
-        this.houseAddress=houseAddress;
+
+    public boolean isHouseIDExist(){
+        return this.houseIDExist;
     }
-    public String getHouseAddress(){
+
+    public void setHouseIDExist(boolean exist){
+        this.houseIDExist = exist;
+    }
+
+
+    public void setHouseAddress(String houseAddress) {
+        this.houseAddress = houseAddress;
+    }
+
+    public String getHouseAddress() {
         return this.getHouseAddress();
     }
-    public void setMailboxState(boolean mailboxState){
-        this.mailboxState=mailboxState;
+
+    public void setMailboxState(boolean mailboxState) {
+        this.mailboxState = mailboxState;
     }
-    public boolean isMailboxState(){
+
+    public boolean isMailboxState() {
         return this.mailboxState;
     }
-    public void setDoorbellState(boolean doorbellState){
-        this.doorbellState=doorbellState;
+
+    public void setDoorbellState(boolean doorbellState) {
+        this.doorbellState = doorbellState;
     }
-    public boolean isDoorbellState(){
+
+    public boolean isDoorbellState() {
         return this.doorbellState;
     }
-    public void setCurrDarkness(double currDarkness){
-        this.currDarkness=currDarkness;
+
+    public void setCurrDarkness(double currDarkness) {
+        this.currDarkness = currDarkness;
     }
-    public double getCurrDarkness(){
+
+    public double getCurrDarkness() {
         return this.currDarkness;
     }
 

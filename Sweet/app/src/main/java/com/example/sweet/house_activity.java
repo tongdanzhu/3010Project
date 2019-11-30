@@ -26,10 +26,10 @@ public class house_activity extends AppCompatActivity {
         Intent getIntent = getIntent();
         houseid = getIntent.getStringExtra("house_id");
 
-        tv_house_id=(TextView) findViewById(R.id.tv_house_id);
+        tv_house_id = (TextView) findViewById(R.id.tv_house_id);
         tv_house_id.setText(houseid);
 
-        bt_temperature =(Button) findViewById(R.id.bt_temperature);
+        bt_temperature = (Button) findViewById(R.id.bt_temperature);
         bt_temperature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,30 +40,30 @@ public class house_activity extends AppCompatActivity {
             }
         });
 
-        bt_light=(Button) findViewById(R.id.bt_light);
+        bt_light = (Button) findViewById(R.id.bt_light);
         bt_light.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(house_activity.this,light.class);
+                Intent intent = new Intent(house_activity.this, light.class);
                 startActivity(intent);
             }
         });
 
 
-        bt_mailbox=(Button) findViewById(R.id.bt_mailbox);
+        bt_mailbox = (Button) findViewById(R.id.bt_mailbox);
         bt_mailbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(house_activity.this,mailbox.class);
+                Intent intent = new Intent(house_activity.this, mailbox.class);
                 startActivity(intent);
             }
         });
 
-        bt_doorbell=(Button) findViewById(R.id.bt_doorbell);
+        bt_doorbell = (Button) findViewById(R.id.bt_doorbell);
         bt_doorbell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(house_activity.this,doorbell.class);
+                Intent intent = new Intent(house_activity.this, doorbell.class);
                 startActivity(intent);
             }
         });

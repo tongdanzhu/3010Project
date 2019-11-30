@@ -3,65 +3,51 @@ package com.example.sweet;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-
-
+import java.util.Scanner;
 
 public class udpSender {
-    private final static int PACKETSIZE = 1000 ;
+    private final static int PACKETSIZE = 100 ;
     private InetAddress host;
-    private String ip = "172.20.10.5";
-    private int port = 8688;
-    int counter = 1;
+    private int port;
+    int counter;
 
-    public static void main(String args[]){
-        String answer;
-        udpSender sender = new udpSender();
-        answer = sender.SendMsg("i need a string value");
-        System.out.println( answer);
-
-    }
-
-
-
-
-    //Send a msg to get a string or int value
-    //to convert string to int: Integer.parseInt(str);
-    public String SendMsg(String s)
+    //check whether the house_id is valid
+    public boolean checkValidationHouseID(String s)
     {
-        String text = null;
+
         DatagramSocket socket = null ;
         try
         {
             // Convert the arguments first, to ensure that they are valid
-            host = InetAddress.getByName( ip) ;
-            counter = 1;
+            host = InetAddress.getByName( "172.20.10.10") ;
+            port         = Integer.parseInt( "8688" ) ;
+            counter      = Integer.parseInt( "1" ) ;
             socket = new DatagramSocket() ;
-            String message = s;
 
+
+            String message = null;
             while (true)
             {
                 for(int x = 1; x <= counter; x++)
                 {
                     //command to be send to the pi
-                    //message = s;
+                    message = s;
                     byte [] data = message.getBytes() ;
                     DatagramPacket packet = new DatagramPacket( data, data.length, host, port ) ;
                     DatagramPacket rePacket = new DatagramPacket( new byte[PACKETSIZE], PACKETSIZE ) ;
-                    socket.setSoTimeout(1000);
                     socket.send( packet ) ;
-
                     while(true)
                     {
+                        //System.out.println(1);
                         socket.receive( rePacket ) ;
-                        text = new String(rePacket.getData(),0,rePacket.getLength());
-                        System.out.println( rePacket.getAddress() + " ++ " + rePacket.getPort() + ": " + text );
+                        System.out.println( rePacket.getAddress() + "++ " + rePacket.getPort() + ": " +new String(rePacket.getData()).trim());
                         break;
                     }
                 }
                 break;
             }
             System.out.println ("Closing down");
-
+            return true;
         }
         catch( Exception e )
         {
@@ -72,7 +58,6 @@ public class udpSender {
             if( socket != null )
                 socket.close() ;
         }
-        return text;
+        return false;
     }
-
 }
