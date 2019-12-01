@@ -49,7 +49,7 @@ public class light extends AppCompatActivity {
         /*
             initial the state of manual control switch
          */
-        
+
         /*
             initial the state of switches (current state of the light
          */
