@@ -23,12 +23,14 @@ public class MyConnection {
     // update threshold
     private static final String UPDATE_THRESHOLD = "UPDATE temperatureControl SET threshold =? WHERE houseID =?";
     // get threshold
-    private static final String GET_THRESHOLD="SELECT threshold FROM temperatureControl WHERE houseID=?";
+    private static final String GET_THRESHOLD = "SELECT threshold FROM temperatureControl WHERE houseID=?";
     //get latest temperature
-    private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
+    private static final String GET_LATEST_TEMP = "SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
+    //insert threshold for house
+    private static final String INSERT_THRESHOLD ="INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
 
     private static Connection conn = null;
-    private double defaultValue=-0.5;
+    private double defaultValue = -0.5;
 
     // establish connection to database in raspberry bi
     public static Connection getConnection() {
@@ -62,26 +64,46 @@ public class MyConnection {
 
         return conn;
     }
+    /*
+        insert new Threshold
+     */
+    public int insertThreshold(int houseID,double threshold) throws SQLException {
+        Connection conn = getConnection();
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(INSERT_THRESHOLD);
+        pstmt.setInt(1, houseID);
+        pstmt.setDouble(2, threshold);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
 
     /*
-        update threshold into database 
+        update threshold into database
      */
+    public int updateThreshold(int houseID, double threshold) throws SQLException {
+        Connection conn = getConnection();
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_THRESHOLD);
+        pstmt.setDouble(1, threshold);
+        pstmt.setInt(2, houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
 
     /*
         get the latest temperature (currTemp) for a certain house from database
      */
-    public double getLatestTemp (int houseID) throws SQLException {
+    public double getLatestTemp(int houseID) throws SQLException {
         Connection conn = getConnection();
-        temperatureVO temperature=new temperatureVO();
+        temperatureVO temperature = new temperatureVO();
         PreparedStatement pstmt = conn.prepareStatement(GET_LATEST_TEMP);
         pstmt.setInt(1, houseID);
-        ResultSet rs =  pstmt.executeQuery();
+        ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
             temperature.setCurrTemp(rs.getDouble("currTemp"));
 
             return temperature.getCurrTemp();
-        }
-        else {
+        } else {
             return defaultValue;
         }
     }
@@ -92,17 +114,16 @@ public class MyConnection {
      */
     public double getThreshold(int houseID) throws SQLException {
         Connection conn = getConnection();
-        temperatureControlVO temperature=new temperatureControlVO();
+        temperatureControlVO temperature = new temperatureControlVO();
         PreparedStatement pstmt = conn.prepareStatement(GET_THRESHOLD);
         pstmt.setInt(1, houseID);
 
-        ResultSet rs =  pstmt.executeQuery();
+        ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
 
             temperature.setThreshold(rs.getDouble("threshold"));
             return temperature.getThreshold();
-        }
-        else{
+        } else {
             return defaultValue;
         }
 

@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,8 +31,12 @@ public class temperature extends AppCompatActivity {
     //private temperatureControlVO temp;
     private String houseid;
 
-    private static final int THRESHOLDEXIST = 1;
-    private static final int ID_NOT_EXIST = 2;
+    private static final int THRESHOLD_NOT_EXIST = 1;
+    private static final int THRESHOLD_EXIST = 2;
+    private static final int UPDATE_NOT_SUCCESSFUL = 3;
+    private static final int UPDATE_SUCCESSFUL = 4;
+    private static final int NO_TEMP_INFO = 5;
+    private static final int LATEST_TEMP = 6;
     private boolean thresholdExist = false;
     private double defaultValue = -0.5;
 
@@ -41,12 +46,29 @@ public class temperature extends AppCompatActivity {
         public void handleMessage(Message msg) {
             boolean isValid;
             switch (msg.what) {
-                case THRESHOLDEXIST:
+                case THRESHOLD_NOT_EXIST:
+                    tv_threshold.setText("Threshold is not exist");
                     toast(msg.obj.toString());
                     thresholdExist = true;
                     break;
-                case 2:
+                case THRESHOLD_EXIST:
+                    tv_threshold.setText(msg.obj.toString());
+                    break;
+                case UPDATE_NOT_SUCCESSFUL:
                     toast(msg.obj.toString());
+                    break;
+                case UPDATE_SUCCESSFUL:
+                    toast(msg.obj.toString());
+                    refresh();
+                    break;
+                case NO_TEMP_INFO:
+                    tv_currTemp.setText(msg.obj.toString());
+                    break;
+                case LATEST_TEMP:
+                    tv_currTemp.setText(msg.obj.toString());
+
+                    break;
+
             }
         }
     };
@@ -107,21 +129,23 @@ public class temperature extends AppCompatActivity {
             public void run() {
                 MyConnection conn = new MyConnection();
                 try {
-                    boolean isThresholdExist = conn.isThresholdExist(Integer.parseInt(houseid));
-
+                    //boolean isThresholdExist = conn.isThresholdExist(Integer.parseInt(houseid));
                     Message message = handler.obtainMessage();
-                    if (!isThresholdExist) {
+
+                    if (conn.getThreshold(Integer.parseInt(houseid)) == defaultValue) {
+
                         String s = "Threshold is not exist";
-                        message.what = THRESHOLDEXIST;
+                        message.what = THRESHOLD_NOT_EXIST;
                         message.obj = s;
                     } else {
-                        if (conn.getThreshold(Integer.parseInt(houseid)) == defaultValue) {
-                            tv_threshold.setText("Threshold is not exist");
-                        } else {
-                            System.out.println("Threshold=" + conn.getThreshold(Integer.parseInt(houseid)) + "------");
-                            tv_threshold.setText(conn.getThreshold(Integer.parseInt(houseid)) + " ℃");
-                        }
+                        //System.out.println("Threshold=" + conn.getThreshold(Integer.parseInt(houseid)) + "------");
+                        //tv_threshold.setText(conn.getThreshold(Integer.parseInt(houseid)) + " ℃");
+                        String s = conn.getThreshold(Integer.parseInt(houseid)) + " ℃";
+                        System.out.println(s+"----------");
+                        message.what = THRESHOLD_EXIST;
+                        message.obj = s;
                     }
+
                     handler.sendMessage(message);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -135,16 +159,22 @@ public class temperature extends AppCompatActivity {
             @Override
             public void run() {
                 MyConnection conn = new MyConnection();
+                Message message = handler.obtainMessage();
                 try {
-                    double latestTemp =conn.getLatestTemp(Integer.parseInt(houseid));
-                    //Message message = handler.obtainMessage();
-                    if(latestTemp==defaultValue){
-                        tv_currTemp.setText("No current temperature information.");
+                    double latestTemp = conn.getLatestTemp(Integer.parseInt(houseid));
+                    if (latestTemp == defaultValue) {
+                        String s = "No current temperature information.";
+                        message.what = NO_TEMP_INFO;
+                        message.obj = s;
+
+                    } else {
+                        String s = latestTemp + " ℃";
+                        System.out.println("latest temperature" + s + "============");
+                        message.what = LATEST_TEMP;
+                        message.obj = s;
+
                     }
-                    else{
-                        tv_currTemp.setText(latestTemp+" ℃");
-                    }
-                    //handler.sendMessage(message);
+                    handler.sendMessage(message);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -156,19 +186,72 @@ public class temperature extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String setThreshold = et_set_threshold.getText().toString();
-
-                if (!isThresholdValid(setThreshold) || !isThresholdisDigit(setThreshold)) {//if the threshold is not valid
+                if (!isThresholdValid(setThreshold)) {//if the threshold is not valid
                     toast("the threshold must be in range of 0C to 40C");
                     bt_set_threshold.setEnabled(Boolean.FALSE);
                 } else {
-                    toast(et_set_threshold.getText().toString());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyConnection conn = new MyConnection();
+                            Message message = handler.obtainMessage();
+                            try {
+                                int updateThreshold = conn.updateThreshold(Integer.parseInt(houseid), Double.valueOf(et_set_threshold.getText().toString()));
+                                if (updateThreshold == 0) { //house id not exist in temperatureControl table
+
+                                    // insert a row for the new house id
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            MyConnection conn = new MyConnection();
+                                            Message message = handler.obtainMessage();
+                                            try {
+                                                if(conn.insertThreshold(Integer.parseInt(houseid),Double.valueOf(et_set_threshold.getText().toString()))!=0){
+                                                    String s = "Update is not successful.";
+                                                    message.what = UPDATE_NOT_SUCCESSFUL;
+                                                    message.obj = s;
+                                                }
+                                                else{
+                                                    String s = "Update is successful.";
+                                                    message.what = UPDATE_SUCCESSFUL;
+                                                    message.obj = s;
+                                                }
+
+                                                handler.sendMessage(message);
+                                            } catch (SQLException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
+                                    //end of insert a new row
+
+                                } else { // update the threshold successfully to the certain house id
+                                    String s = "Update is successful.";
+                                    message.what = UPDATE_SUCCESSFUL;
+                                    message.obj = s;
+                                }
+                                handler.sendMessage(message);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
                 }
-                //startActivity(intent);
 
             }
         });
 
 
+    }
+
+    /*
+        refresh page
+     */
+    private void refresh() {
+        finish();
+        Intent intent = new Intent(temperature.this, temperature.class);
+        intent.putExtra("house_id",houseid);
+        startActivity(intent);
     }
 
 

@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import java.sql.SQLException;
 
+import java.sql.SQLException;
 
 
 public class house extends AppCompatActivity {
@@ -24,8 +24,8 @@ public class house extends AppCompatActivity {
     private EditText et_password;
     private Button bt_enter_house_id;
 
-    private static final int PASSWORD_INCORRECT=1;
-    private static final int ID_NOT_EXIST=2;
+    private static final int PASSWORD_INCORRECT = 1;
+    private static final int ID_NOT_EXIST = 2;
     //final Runnable mRunnable = null;
 
     @SuppressLint("HandlerLeak")
@@ -92,16 +92,15 @@ public class house extends AppCompatActivity {
                             if (userExist) {
                                 if (passwordCorrect) {
                                     Intent intent = new Intent(house.this, house_activity.class);
-                                    intent.putExtra("house_id",et_house_id.getText().toString());
+                                    intent.putExtra("house_id", et_house_id.getText().toString());
                                     startActivity(intent);
-                                }
-                                else{
-                                    String s="password not correct";
+                                } else {
+                                    String s = "password not correct";
                                     message.what = PASSWORD_INCORRECT;
                                     message.obj = s;
                                 }
                             } else {
-                                String s= "house id not exist";
+                                String s = "house id not exist";
                                 message.what = ID_NOT_EXIST;
                                 message.obj = s;
                             }
@@ -110,8 +109,6 @@ public class house extends AppCompatActivity {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }).start();
 
