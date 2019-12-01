@@ -1,5 +1,6 @@
 package com.example.sweet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -15,27 +16,31 @@ public class light extends AppCompatActivity {
     private Switch sw_manual_control;
     private lightControlVO light;
     private ToggleButton tbt_manual_control;
+    private TextView tv_currHouse;
+
+    private String houseid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.light);
 
-        light = new lightControlVO();
-        // light.setLightState(false);
 
         tv_light_state = (TextView) findViewById(R.id.tv_light_state);
         //toggle button of turn on or off the light manually
         tbt_manual_control = (ToggleButton) findViewById(R.id.tbt_manual_control);
         //switch of manual controller of light
         sw_manual_control = (Switch) findViewById(R.id.sw_manual_control);
+        //text view for current house
 
+        tv_currHouse = (TextView) findViewById(R.id.tv_currHouse_light);
 
-        //if(light.isLightState()){
-        //    tv_light_state.setText("Light is ON");}
-        // else{
-        //    tv_light_state.setText("Light if OFF");
-        //}
+        //receive parameter from previous page
+        Intent getIntent = getIntent();
+        houseid = getIntent.getStringExtra("house_id");
+        //display current house id
+        tv_currHouse.setText(houseid);
+        light = new lightControlVO();
 
 
         sw_manual_control.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

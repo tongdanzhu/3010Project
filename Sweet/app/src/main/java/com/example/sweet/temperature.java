@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,8 +27,7 @@ public class temperature extends AppCompatActivity {
     private TextView tv_currHouse;
     private TextView tv_currTemp;
 
-    //private temperatureControlVO temp;
-    private String houseid;
+    private String houseid = null;
 
     private static final int THRESHOLD_NOT_EXIST = 1;
     private static final int THRESHOLD_EXIST = 2;
@@ -37,19 +35,18 @@ public class temperature extends AppCompatActivity {
     private static final int UPDATE_SUCCESSFUL = 4;
     private static final int NO_TEMP_INFO = 5;
     private static final int LATEST_TEMP = 6;
-    private boolean thresholdExist = false;
+
     private double defaultValue = -0.5;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            boolean isValid;
+
             switch (msg.what) {
                 case THRESHOLD_NOT_EXIST:
                     tv_threshold.setText("Threshold is not exist");
                     toast(msg.obj.toString());
-                    thresholdExist = true;
                     break;
                 case THRESHOLD_EXIST:
                     tv_threshold.setText(msg.obj.toString());
@@ -78,14 +75,6 @@ public class temperature extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.temperature);
 
-        // initialization of temperature object
-        //temp = new temperatureControlVO();
-        //temp.setCurrDate();
-        //temp.setCurrTime();
-
-        // receive parameter from previous page
-        Intent getIntent = getIntent();
-        houseid = getIntent.getStringExtra("house_id");
 
 
         /* elements initialization
@@ -96,6 +85,9 @@ public class temperature extends AppCompatActivity {
         tv_currHouse = (TextView) findViewById(R.id.tv_currHouse);
         tv_threshold = (TextView) findViewById(R.id.tv_threshold);
 
+        // receive parameter from previous page
+        Intent getIntent = getIntent();
+        houseid = getIntent.getStringExtra("house_id");
 
         //display current house id
         tv_currHouse.setText(houseid);
@@ -104,12 +96,12 @@ public class temperature extends AppCompatActivity {
         et_set_threshold.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //et_set_threshold.setEnabled(Boolean.FALSE);
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //et_set_threshold.setEnabled(Boolean.FALSE);
+
             }
 
             @Override
@@ -138,10 +130,8 @@ public class temperature extends AppCompatActivity {
                         message.what = THRESHOLD_NOT_EXIST;
                         message.obj = s;
                     } else {
-                        //System.out.println("Threshold=" + conn.getThreshold(Integer.parseInt(houseid)) + "------");
-                        //tv_threshold.setText(conn.getThreshold(Integer.parseInt(houseid)) + " ℃");
+
                         String s = conn.getThreshold(Integer.parseInt(houseid)) + " ℃";
-                        System.out.println(s+"----------");
                         message.what = THRESHOLD_EXIST;
                         message.obj = s;
                     }
@@ -169,7 +159,6 @@ public class temperature extends AppCompatActivity {
 
                     } else {
                         String s = latestTemp + " ℃";
-                        System.out.println("latest temperature" + s + "============");
                         message.what = LATEST_TEMP;
                         message.obj = s;
 
@@ -186,7 +175,7 @@ public class temperature extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String setThreshold = et_set_threshold.getText().toString();
-                if (!isThresholdValid(setThreshold)) {//if the threshold is not valid
+                if (!isThresholdValid(setThreshold) || !isThresholdisDigit(setThreshold)) {//if the threshold is not valid
                     toast("the threshold must be in range of 0C to 40C");
                     bt_set_threshold.setEnabled(Boolean.FALSE);
                 } else {
@@ -206,12 +195,11 @@ public class temperature extends AppCompatActivity {
                                             MyConnection conn = new MyConnection();
                                             Message message = handler.obtainMessage();
                                             try {
-                                                if(conn.insertThreshold(Integer.parseInt(houseid),Double.valueOf(et_set_threshold.getText().toString()))!=0){
+                                                if (conn.insertThreshold(Integer.parseInt(houseid), Double.valueOf(et_set_threshold.getText().toString())) != 0) {
                                                     String s = "Update is not successful.";
                                                     message.what = UPDATE_NOT_SUCCESSFUL;
                                                     message.obj = s;
-                                                }
-                                                else{
+                                                } else {
                                                     String s = "Update is successful.";
                                                     message.what = UPDATE_SUCCESSFUL;
                                                     message.obj = s;
@@ -250,7 +238,7 @@ public class temperature extends AppCompatActivity {
     private void refresh() {
         finish();
         Intent intent = new Intent(temperature.this, temperature.class);
-        intent.putExtra("house_id",houseid);
+        intent.putExtra("house_id", houseid);
         startActivity(intent);
     }
 
@@ -258,7 +246,7 @@ public class temperature extends AppCompatActivity {
     //check whether the input threshold is a digital
     public boolean isThresholdisDigit(String threshold) {
         for (int i = 0; i < threshold.length(); i++) {
-            if (!Character.isDigit(threshold.charAt(i))) {
+            if (!Character.isDigit(threshold.charAt(i)) && threshold.charAt(i) != '.') {
                 return false;
             }
         }

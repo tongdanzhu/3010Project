@@ -27,7 +27,9 @@ public class MyConnection {
     //get latest temperature
     private static final String GET_LATEST_TEMP = "SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     //insert threshold for house
-    private static final String INSERT_THRESHOLD ="INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
+    private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
+    // update mailbox confirm
+    private static final String UPDATE_MAILBOX_CONFIRM = "UPDATE user SET mailboxState=? WHERE houseID=?;";
 
     private static Connection conn = null;
     private double defaultValue = -0.5;
@@ -64,10 +66,43 @@ public class MyConnection {
 
         return conn;
     }
+
+    /*
+        update mailbox state, confirm
+     */
+    public int updateMailboxConfirm(int houseID) throws SQLException {
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_MAILBOX_CONFIRM);
+        pstmt.setBoolean(1, false);
+        pstmt.setInt(2, houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
+
+    /*
+        get current mailbox state
+     */
+    public boolean getMailboxState(int houseID) throws SQLException {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(GET_MAILBOX_STATE);
+        pstmt.setInt(1, houseID);
+        ResultSet rs = pstmt.executeQuery();
+        houseVO house = new houseVO();
+        while (rs.next()) {
+            house.setMailboxState(rs.getBoolean("mailboxState"));
+        }
+        if (house.isMailboxState()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     /*
         insert new Threshold
      */
-    public int insertThreshold(int houseID,double threshold) throws SQLException {
+    public int insertThreshold(int houseID, double threshold) throws SQLException {
         Connection conn = getConnection();
         int updateCount = 0;
         PreparedStatement pstmt = conn.prepareStatement(INSERT_THRESHOLD);
@@ -176,26 +211,6 @@ public class MyConnection {
             return true;
         }
         return false;
-    }
-
-    /*
-        get current mailbox state
-     */
-    public boolean getMailboxState(int houseID) throws SQLException {
-        Connection conn = getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(GET_MAILBOX_STATE);
-        pstmt.setInt(1, houseID);
-        ResultSet rs = pstmt.executeQuery();
-        houseVO house = new houseVO();
-        while (rs.next()) {
-            house.setMailboxState(rs.getBoolean("mailboxState"));
-        }
-        if (house.isMailboxState()) {
-            return true;
-        } else {
-            return false;
-        }
-
     }
 
 
