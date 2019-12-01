@@ -20,19 +20,20 @@ import java.sql.SQLException;
 
 public class temperature extends AppCompatActivity {
 
-    private TextView tv_currDate;
-    private TextView tv_currTime;
+
     private TextView tv_threshold;
     private Button bt_set_threshold;
     private EditText et_set_threshold;
     private TextView tv_currHouse;
+    private TextView tv_currTemp;
 
-    private temperatureControlVO temp;
+    //private temperatureControlVO temp;
     private String houseid;
 
-    private static final int THRESHOLDEXIST=1;
-    private static final int ID_NOT_EXIST=2;
-    private boolean thresholdExist=false;
+    private static final int THRESHOLDEXIST = 1;
+    private static final int ID_NOT_EXIST = 2;
+    private boolean thresholdExist = false;
+    private double defaultValue = -0.5;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -42,7 +43,7 @@ public class temperature extends AppCompatActivity {
             switch (msg.what) {
                 case THRESHOLDEXIST:
                     toast(msg.obj.toString());
-                    thresholdExist=true;
+                    thresholdExist = true;
                     break;
                 case 2:
                     toast(msg.obj.toString());
@@ -56,7 +57,7 @@ public class temperature extends AppCompatActivity {
         setContentView(R.layout.temperature);
 
         // initialization of temperature object
-        temp = new temperatureControlVO();
+        //temp = new temperatureControlVO();
         //temp.setCurrDate();
         //temp.setCurrTime();
 
@@ -67,16 +68,13 @@ public class temperature extends AppCompatActivity {
 
         /* elements initialization
          */
-        tv_currDate = (TextView) findViewById(R.id.tv_currDate); //text view for current date
-        tv_currTime = (TextView) findViewById(R.id.tv_currTime); //text view for current time
+        tv_currTemp = (TextView) findViewById(R.id.tv_currTemp); // text view for latest temperature
         bt_set_threshold = (Button) findViewById(R.id.bt_set_threshold); //button for setting threshold
         et_set_threshold = (EditText) findViewById(R.id.et_set_threshold); // edit text for inputting threshold
-        tv_currHouse=(TextView) findViewById(R.id.tv_currHouse);
+        tv_currHouse = (TextView) findViewById(R.id.tv_currHouse);
+        tv_threshold = (TextView) findViewById(R.id.tv_threshold);
 
-        //display current date
-       //tv_currDate.setText(temp.getCurrDate());
-        //display current time
-        //tv_currTime.setText(temp.getCurrTime());
+
         //display current house id
         tv_currHouse.setText(houseid);
 
@@ -113,23 +111,45 @@ public class temperature extends AppCompatActivity {
 
                     Message message = handler.obtainMessage();
                     if (!isThresholdExist) {
-                            String s="Threshold is not exist";
-                            message.what = THRESHOLDEXIST;
-                            message.obj = s;
+                        String s = "Threshold is not exist";
+                        message.what = THRESHOLDEXIST;
+                        message.obj = s;
+                    } else {
+                        if (conn.getThreshold(Integer.parseInt(houseid)) == defaultValue) {
+                            tv_threshold.setText("Threshold is not exist");
+                        } else {
+                            System.out.println("Threshold=" + conn.getThreshold(Integer.parseInt(houseid)) + "------");
+                            tv_threshold.setText(conn.getThreshold(Integer.parseInt(houseid)) + " ℃");
                         }
-                    else{
-                       //tv_threshold.setText(conn.getThreshold(Integer.parseInt(houseid))+"");
                     }
                     handler.sendMessage(message);
-
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }).start();
 
+
+        //display latest temperature where the house id is the one received from previous page
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MyConnection conn = new MyConnection();
+                try {
+                    double latestTemp =conn.getLatestTemp(Integer.parseInt(houseid));
+                    //Message message = handler.obtainMessage();
+                    if(latestTemp==defaultValue){
+                        tv_currTemp.setText("No current temperature information.");
+                    }
+                    else{
+                        tv_currTemp.setText(latestTemp+" ℃");
+                    }
+                    //handler.sendMessage(message);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
         //button listener for updating the threshold
         bt_set_threshold.setOnClickListener(new View.OnClickListener() {
@@ -150,11 +170,6 @@ public class temperature extends AppCompatActivity {
 
 
     }
-
-
-
-
-
 
 
     //check whether the input threshold is a digital

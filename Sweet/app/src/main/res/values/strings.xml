@@ -10,7 +10,7 @@
     <string name="currentLightState">Current Light State: </string>
     <string name="currentThreshold">Current Threshold: </string>
     <string name="setThreshold">Set Threshold</string>
-    <string name="thresholdRange">Update Threshold (0C-40C): </string>
+    <string name="thresholdRange">Update Threshold (0 ℃-40 ℃): </string>
     <string name="manualControlLight">Manual Control Light</string>
     <string name="sweetHome">Sweet Home</string>
 

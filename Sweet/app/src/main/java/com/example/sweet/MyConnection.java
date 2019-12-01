@@ -24,11 +24,11 @@ public class MyConnection {
     private static final String UPDATE_THRESHOLD = "UPDATE temperatureControl SET threshold =? WHERE houseID =?";
     // get threshold
     private static final String GET_THRESHOLD="SELECT threshold FROM temperatureControl WHERE houseID=?";
-
     //get latest temperature
     private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
 
     private static Connection conn = null;
+    private double defaultValue=-0.5;
 
     // establish connection to database in raspberry bi
     public static Connection getConnection() {
@@ -36,12 +36,19 @@ public class MyConnection {
         if (conn == null) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
+
+                //url for app connects to remote database
                 //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-                 String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
+                //url for app connects to local database
+                String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
+                //url for test
                 //String url = "jdbc:mysql://localhost:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
                 String user = "root";
-                String password = "sysc3010!";
-                //String password = "password";
+                String password = "sysc3010!";//password for local database
+                //String password = "password"; //password for remote database
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(url);
                 System.out.println(user);
@@ -56,17 +63,49 @@ public class MyConnection {
         return conn;
     }
 
+    /*
+        update threshold into database 
+     */
+
+    /*
+        get the latest temperature (currTemp) for a certain house from database
+     */
+    public double getLatestTemp (int houseID) throws SQLException {
+        Connection conn = getConnection();
+        temperatureVO temperature=new temperatureVO();
+        PreparedStatement pstmt = conn.prepareStatement(GET_LATEST_TEMP);
+        pstmt.setInt(1, houseID);
+        ResultSet rs =  pstmt.executeQuery();
+        if (rs.next()) {
+            temperature.setCurrTemp(rs.getDouble("currTemp"));
+
+            return temperature.getCurrTemp();
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+
+    /*
+        get the threshold of the certain house id from the database
+     */
     public double getThreshold(int houseID) throws SQLException {
         Connection conn = getConnection();
         temperatureControlVO temperature=new temperatureControlVO();
         PreparedStatement pstmt = conn.prepareStatement(GET_THRESHOLD);
         pstmt.setInt(1, houseID);
+
         ResultSet rs =  pstmt.executeQuery();
         if (rs.next()) {
 
             temperature.setThreshold(rs.getDouble("threshold"));
+            return temperature.getThreshold();
         }
-        return temperature.getThreshold();
+        else{
+            return defaultValue;
+        }
+
     }
 
     /*

@@ -17,7 +17,7 @@ public class temperatureControlVO {
 
 
     public double getThreshold() {
-        return this.getThreshold();
+        return this.threshold;
     }
 
     public void setThreshold(double threshold) {
