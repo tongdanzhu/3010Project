@@ -7,44 +7,46 @@ public class lightVO {
     private boolean manualControl;
     private boolean controlSwitch;
 
-    public int getLightID(){
+    public int getLightID() {
         return this.lightID;
     }
-    public void setLightID(int lightID)
-    {
-        this.lightID=lightID;
+
+    public void setLightID(int lightID) {
+        this.lightID = lightID;
     }
 
-    public int getHouseID(){
+    public int getHouseID() {
         return this.houseID;
     }
-    public void setHouseID(int houseID){
-        this.houseID=houseID;
+
+    public void setHouseID(int houseID) {
+        this.houseID = houseID;
     }
-    public boolean isLightState(){
+
+    public boolean isLightState() {
         return this.lightState;
     }
 
-    public void setLightState(boolean lightState){
-        this.lightState=lightState;
+    public void setLightState(boolean lightState) {
+        this.lightState = lightState;
 
     }
 
 
-    public boolean isManualControl(){
+    public boolean isManualControl() {
         return this.manualControl;
     }
 
-    public void setManualControl(boolean manualControl){
-        this.manualControl=manualControl;
+    public void setManualControl(boolean manualControl) {
+        this.manualControl = manualControl;
 
     }
 
     public boolean isControlSwitch() {
         return this.controlSwitch;
     }
-    public void setControlSwitch(boolean controlSwitch)
-    {
-        this.controlSwitch=controlSwitch;
+
+    public void setControlSwitch(boolean controlSwitch) {
+        this.controlSwitch = controlSwitch;
     }
 }

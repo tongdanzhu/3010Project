@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sweet</string>
-    <string name="enter_house_id">enter house id</string>
+    <string name="enter_house_id">Login</string>
     <string name="temperature">temperature</string>
     <string name="light">light</string>
     <string name="mailbox">mailbox</string>
@@ -13,4 +13,5 @@
     <string name="thresholdRange">Update Threshold (0C-40C): </string>
     <string name="manualControlLight">Manual Control Light</string>
     <string name="sweetHome">Sweet Home</string>
+
 </resources>
