@@ -13,7 +13,7 @@ public class light extends AppCompatActivity {
 
     private TextView tv_light_state;
     private Switch sw_manual_control;
-    private lightVO light;
+    private lightControlVO light;
     private ToggleButton tbt_manual_control;
 
     @Override
@@ -21,8 +21,8 @@ public class light extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.light);
 
-        light = new lightVO();
-        light.setLightState(false);
+        light = new lightControlVO();
+        // light.setLightState(false);
 
         tv_light_state = (TextView) findViewById(R.id.tv_light_state);
         //toggle button of turn on or off the light manually
@@ -31,11 +31,11 @@ public class light extends AppCompatActivity {
         sw_manual_control = (Switch) findViewById(R.id.sw_manual_control);
 
 
-        if(light.isLightState()){
-            tv_light_state.setText("Light is ON");}
-        else{
-            tv_light_state.setText("Light if OFF");
-        }
+        //if(light.isLightState()){
+        //    tv_light_state.setText("Light is ON");}
+        // else{
+        //    tv_light_state.setText("Light if OFF");
+        //}
 
 
         sw_manual_control.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -58,18 +58,19 @@ public class light extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     toast("Turn On Light");
-                    light.setLightState(isChecked);
+                    //light.setLightState(isChecked);
                 } else {
                     toast("Turn Off Light");
-                    light.setLightState(isChecked);
+                    // light.setLightState(isChecked);
                 }
             }
         });
 
 
     }
-    private void toast(String s){
-        Toast.makeText(getApplication(),s, Toast.LENGTH_SHORT).show();
+
+    private void toast(String s) {
+        Toast.makeText(getApplication(), s, Toast.LENGTH_SHORT).show();
     }
 
 }

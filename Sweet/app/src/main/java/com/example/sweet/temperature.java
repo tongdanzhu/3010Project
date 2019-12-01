@@ -27,7 +27,7 @@ public class temperature extends AppCompatActivity {
     private EditText et_set_threshold;
     private TextView tv_currHouse;
 
-    private temperatureVO temp;
+    private temperatureControlVO temp;
     private String houseid;
 
     private static final int THRESHOLDEXIST=1;
@@ -56,9 +56,9 @@ public class temperature extends AppCompatActivity {
         setContentView(R.layout.temperature);
 
         // initialization of temperature object
-        temp = new temperatureVO();
-        temp.setCurrDate();
-        temp.setCurrTime();
+        temp = new temperatureControlVO();
+        //temp.setCurrDate();
+        //temp.setCurrTime();
 
         // receive parameter from previous page
         Intent getIntent = getIntent();
@@ -74,9 +74,9 @@ public class temperature extends AppCompatActivity {
         tv_currHouse=(TextView) findViewById(R.id.tv_currHouse);
 
         //display current date
-        tv_currDate.setText(temp.getCurrDate());
+       //tv_currDate.setText(temp.getCurrDate());
         //display current time
-        tv_currTime.setText(temp.getCurrTime());
+        //tv_currTime.setText(temp.getCurrTime());
         //display current house id
         tv_currHouse.setText(houseid);
 
@@ -118,7 +118,7 @@ public class temperature extends AppCompatActivity {
                             message.obj = s;
                         }
                     else{
-                       // tv_threshold.setText();
+                       //tv_threshold.setText(conn.getThreshold(Integer.parseInt(houseid))+"");
                     }
                     handler.sendMessage(message);
 

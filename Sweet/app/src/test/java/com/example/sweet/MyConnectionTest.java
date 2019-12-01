@@ -65,7 +65,7 @@ public class MyConnectionTest {
     @Test
     public void getMailboxState() {
         try {
-            assertEquals(true,con.getMailboxState(1));
+            assertEquals(false,con.getMailboxState(1));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,5 +88,16 @@ public class MyConnectionTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void Test_get_threshold(){
+        try {
+
+            assertEquals(28.5,con.getThreshold(1),0.2);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

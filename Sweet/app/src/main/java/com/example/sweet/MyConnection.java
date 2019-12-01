@@ -23,8 +23,10 @@ public class MyConnection {
     // update threshold
     private static final String UPDATE_THRESHOLD = "UPDATE temperatureControl SET threshold =? WHERE houseID =?";
     // get threshold
-    private static final String GET_THRESHOLD="SELECT * FROM temperatureControl WHERE houseID=?";
+    private static final String GET_THRESHOLD="SELECT threshold FROM temperatureControl WHERE houseID=?";
 
+    //get latest temperature
+    private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
 
     private static Connection conn = null;
 
@@ -34,12 +36,12 @@ public class MyConnection {
         if (conn == null) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                String url = "jdbc:mysql://192.168.43.112:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-                // String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                 String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
                 //String url = "jdbc:mysql://localhost:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
                 String user = "root";
-                //String password = "sysc3010!";
-                String password = "password";
+                String password = "sysc3010!";
+                //String password = "password";
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(url);
                 System.out.println(user);
@@ -54,26 +56,19 @@ public class MyConnection {
         return conn;
     }
 
-   /* public static double getThreshold(int houseID) throws SQLException {
-        temperatureVO temperature=null;
-        PreparedStatement pstmt = conn.prepareStatement(GET_TEMPERATURE);
-        List<temperatureVO> temperatures = new ArrayList<temperatureVO>();
+    public double getThreshold(int houseID) throws SQLException {
+        Connection conn = getConnection();
+        temperatureControlVO temperature=new temperatureControlVO();
+        PreparedStatement pstmt = conn.prepareStatement(GET_THRESHOLD);
         pstmt.setInt(1, houseID);
         ResultSet rs =  pstmt.executeQuery();
-        while (rs.next()) {
-            temperature = new temperatureVO();
-            temperature.setHouseID(rs.getInt("houseID"));
+        if (rs.next()) {
 
             temperature.setThreshold(rs.getDouble("threshold"));
-            temperature.setCurrTemp(rs.getDouble("currTemp"));
-            temperature.setCurrDate(rs.getString("currDate").toString());
-            temperature.setCurrTime(rs.getString("currTime"));
-            temperature.setFanState(rs.getBoolean("fanState"));
-            temperatures.add(temperature);
         }
         return temperature.getThreshold();
     }
-*/
+
     /*
         search the database whether the threshold exists or not for a certain houseID
      */
@@ -115,8 +110,7 @@ public class MyConnection {
         pstmt.setString(2, password);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
-            System.out.println(rs.getInt("houseID"));
-            System.out.println(rs.getString("password"));
+
             rs.close();
             pstmt.close();
             return true;
@@ -128,6 +122,7 @@ public class MyConnection {
         get current mailbox state
      */
     public boolean getMailboxState(int houseID) throws SQLException {
+        Connection conn = getConnection();
         PreparedStatement pstmt = conn.prepareStatement(GET_MAILBOX_STATE);
         pstmt.setInt(1, houseID);
         ResultSet rs = pstmt.executeQuery();

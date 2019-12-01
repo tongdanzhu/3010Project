@@ -26,7 +26,7 @@ public class house extends AppCompatActivity {
 
     private static final int PASSWORD_INCORRECT=1;
     private static final int ID_NOT_EXIST=2;
-    final Runnable mRunnable = null;
+    //final Runnable mRunnable = null;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
