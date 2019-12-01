@@ -30,6 +30,11 @@ public class MyConnection {
     private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
     // update mailbox confirm
     private static final String UPDATE_MAILBOX_CONFIRM = "UPDATE user SET mailboxState=? WHERE houseID=?;";
+    // update manual control
+    private static final String UPDATE_MANUAL_CONTROL = "UPDATE light SET manualControl=? WHERE houseID=?";
+
+    // get manual control
+    private static final String GET_MANUAL_CONTROL = "UPDATE light SET manualControl=? WHERE houseID=?";
 
     private static Connection conn = null;
     private double defaultValue = -0.5;
@@ -65,6 +70,18 @@ public class MyConnection {
         }
 
         return conn;
+    }
+
+    /*
+        update manual control
+     */
+    public int updateManualControl(int houseID, boolean manualControl) throws SQLException {
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_MANUAL_CONTROL);
+        pstmt.setBoolean(1, manualControl);
+        pstmt.setInt(2, houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
     }
 
     /*

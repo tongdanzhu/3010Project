@@ -26,23 +26,37 @@ public class light extends AppCompatActivity {
         setContentView(R.layout.light);
 
 
-        tv_light_state = (TextView) findViewById(R.id.tv_light_state);
+        /*
+            initial elements
+         */
+        //text view for current house
+        tv_currHouse = (TextView) findViewById(R.id.tv_currHouse_light);
         //toggle button of turn on or off the light manually
         tbt_manual_control = (ToggleButton) findViewById(R.id.tbt_manual_control);
         //switch of manual controller of light
         sw_manual_control = (Switch) findViewById(R.id.sw_manual_control);
-        //text view for current house
 
-        tv_currHouse = (TextView) findViewById(R.id.tv_currHouse_light);
 
         //receive parameter from previous page
         Intent getIntent = getIntent();
         houseid = getIntent.getStringExtra("house_id");
         //display current house id
         tv_currHouse.setText(houseid);
+
+
         light = new lightControlVO();
 
+        /*
+            initial the state of manual control switch
+         */
+        
+        /*
+            initial the state of switches (current state of the light
+         */
 
+        /*
+            update change on the switch
+         */
         sw_manual_control.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -58,7 +72,9 @@ public class light extends AppCompatActivity {
             }
         });
 
-
+        /*
+            update the change on the toggle button
+         */
         tbt_manual_control.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
