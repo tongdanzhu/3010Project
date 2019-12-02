@@ -40,11 +40,12 @@ public class MyConnection {
     // update mailbox confirm
     private static final String UPDATE_MAILBOX_CONFIRM = "UPDATE user SET mailboxState=? WHERE houseID=?;";
     // update manual control
-    private static final String UPDATE_MANUAL_CONTROL = "UPDATE light SET manualControl=? WHERE houseID=?";
+    private static final String UPDATE_MANUAL_CONTROL = "UPDATE lightControl SET manualControl=? WHERE houseID=?";
 
     // get manual control
-    private static final String GET_MANUAL_CONTROL = "UPDATE light SET manualControl=? WHERE houseID=?";
-
+    private static final String GET_MANUAL_CONTROL = "select manualControl from lightControl where houseID =?";
+    // insert default manual control
+    private static final String INSERT_LIGHT_CONTROL ="INSERT INTO lightControl (houseID,manualControl,switches) VALUES (?,0,0)";
 
     private static Connection conn = null;
     private double defaultValue = -0.5;
@@ -59,20 +60,18 @@ public class MyConnection {
                 //url for app connects to remote database
                 //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
-                 //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
                 //String url = "jdbc:mysql://192.168.0.19:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-
 
                 //url for app connects to local database
                 String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 //url for test
-
                 //String url = "jdbc:mysql://localhost:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 String user = "root";
                 String password = "sysc3010!";//password for local database
                 //String password = "password"; //password for remote database
+
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(url);
                 System.out.println(user);
@@ -88,9 +87,42 @@ public class MyConnection {
     }
 
     /*
+        get manual control
+     */
+    public boolean getManualControl (int houseID) throws SQLException {
+        Connection conn = getConnection();
+
+        lightControlVO lightControl=new lightControlVO();
+        PreparedStatement pstmt = conn.prepareStatement(GET_MANUAL_CONTROL);
+        pstmt.setInt(1, houseID);
+        int updateCount = 0;
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) { // have record in the database
+            lightControl.setManualControl(rs.getBoolean("manualControl"));
+            if(lightControl.isManualControl()){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } else {// no manual control information, set default manual control with manual control off and switch off
+            PreparedStatement pstmt1 = conn.prepareStatement(INSERT_LIGHT_CONTROL);
+            pstmt1.setInt(1, houseID);
+            updateCount = pstmt1.executeUpdate();
+            if(updateCount!=0){
+                return false;
+            }
+            return false;
+
+        }
+    }
+
+
+    /*
         update manual control
      */
     public int updateManualControl(int houseID, boolean manualControl) throws SQLException {
+        Connection conn = getConnection();
         int updateCount = 0;
         PreparedStatement pstmt = conn.prepareStatement(UPDATE_MANUAL_CONTROL);
         pstmt.setBoolean(1, manualControl);
@@ -103,6 +135,7 @@ public class MyConnection {
         update mailbox state, confirm
      */
     public int updateMailboxConfirm(int houseID) throws SQLException {
+        Connection conn = getConnection();
         int updateCount = 0;
         PreparedStatement pstmt = conn.prepareStatement(UPDATE_MAILBOX_CONFIRM);
         pstmt.setBoolean(1, false);
@@ -248,19 +281,7 @@ public class MyConnection {
     }
 
 
-    /*
-       update mailbox state
-    */
-    /*
-    public int confirmMailbox(int houseID) throws SQLException{
-        int updateCount = 0;
-        PreparedStatement pstmt = conn.prepareStatement(UPDATE_MAILBOX_CONFIRM);
-        pstmt.setBoolean(1,true);
-        pstmt.setInt(2,houseID);
-        updateCount = pstmt.executeUpdate();
-        return updateCount;
-    }
-*/
+
 
     /*
         get visitors list
