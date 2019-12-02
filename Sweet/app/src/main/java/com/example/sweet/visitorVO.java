@@ -36,5 +36,7 @@ public class visitorVO {
     public void setConfirm(boolean confirm) {
         this.confirm = confirm;
     }
-
+    public String print_as_String(visitorVO v){
+        return currDate + "  " + currTime;
+    }
 }

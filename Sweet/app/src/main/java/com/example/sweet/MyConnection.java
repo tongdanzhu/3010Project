@@ -28,7 +28,7 @@ public class MyConnection {
 
     private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     //get visitor information
-    private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? confirm=?";
+    private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? and confirm=?";
     //confirm the visitor list
     private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =?";
     //confirm the mailbox
@@ -60,19 +60,19 @@ public class MyConnection {
                 //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                  //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-                //String url = "jdbc:mysql://192.168.0.19:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                String url = "jdbc:mysql://192.168.0.19:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
 
                 //url for app connects to local database
-                String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 //url for test
 
                 //String url = "jdbc:mysql://localhost:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 String user = "root";
-                String password = "sysc3010!";//password for local database
-                //String password = "password"; //password for remote database
+                //String password = "sysc3010!";//password for local database
+                String password = "password"; //password for remote database
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(url);
                 System.out.println(user);
@@ -275,7 +275,7 @@ public class MyConnection {
         ResultSet rs = pstmt.executeQuery();
         while(rs.next()){
             visitorVO visitor = new visitorVO();
-            visitor.setVisitorID(rs.getInt("visitorID"));
+            visitor.setVisitorID(rs.getInt("id"));
             visitor.setHouseID(rs.getInt("houseID"));
             visitor.setCurrDate(rs.getString("currDate"));
             visitor.setCurrTime(rs.getString("currTime"));
@@ -285,6 +285,7 @@ public class MyConnection {
         }
         return visitors;
     }
+
 
 
     /*
