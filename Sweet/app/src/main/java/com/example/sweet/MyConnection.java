@@ -23,18 +23,31 @@ public class MyConnection {
     // update threshold
     private static final String UPDATE_THRESHOLD = "UPDATE temperatureControl SET threshold =? WHERE houseID =?";
     // get threshold
-    private static final String GET_THRESHOLD="SELECT threshold FROM temperatureControl WHERE houseID=?";
-
+    private static final String GET_THRESHOLD = "SELECT threshold FROM temperatureControl WHERE houseID=?";
     //get latest temperature
+
     private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     //get visitor information
     private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? confirm=?";
     //confirm the visitor list
     private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =?";
     //confirm the mailbox
-    private static final String Confirm_Mailbox = "UPDATE user SET mailboxState = ? WHERE houseID = ?";
+   // private static final String Confirm_Mailbox = "UPDATE user SET mailboxState = ? WHERE houseID = ?";
+
+   // private static final String GET_LATEST_TEMP = "SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
+    //insert threshold for house
+    private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
+    // update mailbox confirm
+    private static final String UPDATE_MAILBOX_CONFIRM = "UPDATE user SET mailboxState=? WHERE houseID=?;";
+    // update manual control
+    private static final String UPDATE_MANUAL_CONTROL = "UPDATE light SET manualControl=? WHERE houseID=?";
+
+    // get manual control
+    private static final String GET_MANUAL_CONTROL = "UPDATE light SET manualControl=? WHERE houseID=?";
+
 
     private static Connection conn = null;
+    private double defaultValue = -0.5;
 
     // establish connection to database in raspberry bi
     public static Connection getConnection() {
@@ -42,13 +55,24 @@ public class MyConnection {
         if (conn == null) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
+
+                //url for app connects to remote database
                 //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
                  //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-                String url = "jdbc:mysql://192.168.19:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                //String url = "jdbc:mysql://192.168.0.19:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
+
+                //url for app connects to local database
+                String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
+                //url for test
+
                 //String url = "jdbc:mysql://localhost:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
                 String user = "root";
-                String password = "sysc3010!";
-                //String password = "password";
+                String password = "sysc3010!";//password for local database
+                //String password = "password"; //password for remote database
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(url);
                 System.out.println(user);
@@ -63,17 +87,94 @@ public class MyConnection {
         return conn;
     }
 
+    /*
+        update manual control
+     */
+    public int updateManualControl(int houseID, boolean manualControl) throws SQLException {
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_MANUAL_CONTROL);
+        pstmt.setBoolean(1, manualControl);
+        pstmt.setInt(2, houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
+
+    /*
+        update mailbox state, confirm
+     */
+    public int updateMailboxConfirm(int houseID) throws SQLException {
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_MAILBOX_CONFIRM);
+        pstmt.setBoolean(1, false);
+        pstmt.setInt(2, houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
+
+
+    /*
+        insert new Threshold
+     */
+    public int insertThreshold(int houseID, double threshold) throws SQLException {
+        Connection conn = getConnection();
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(INSERT_THRESHOLD);
+        pstmt.setInt(1, houseID);
+        pstmt.setDouble(2, threshold);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
+
+    /*
+        update threshold into database
+     */
+    public int updateThreshold(int houseID, double threshold) throws SQLException {
+        Connection conn = getConnection();
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_THRESHOLD);
+        pstmt.setDouble(1, threshold);
+        pstmt.setInt(2, houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
+
+    /*
+        get the latest temperature (currTemp) for a certain house from database
+     */
+    public double getLatestTemp(int houseID) throws SQLException {
+        Connection conn = getConnection();
+        temperatureVO temperature = new temperatureVO();
+        PreparedStatement pstmt = conn.prepareStatement(GET_LATEST_TEMP);
+        pstmt.setInt(1, houseID);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            temperature.setCurrTemp(rs.getDouble("currTemp"));
+
+            return temperature.getCurrTemp();
+        } else {
+            return defaultValue;
+        }
+    }
+
+
+    /*
+        get the threshold of the certain house id from the database
+     */
     public double getThreshold(int houseID) throws SQLException {
         Connection conn = getConnection();
-        temperatureControlVO temperature=new temperatureControlVO();
+        temperatureControlVO temperature = new temperatureControlVO();
         PreparedStatement pstmt = conn.prepareStatement(GET_THRESHOLD);
         pstmt.setInt(1, houseID);
-        ResultSet rs =  pstmt.executeQuery();
+
+        ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
 
             temperature.setThreshold(rs.getDouble("threshold"));
+            return temperature.getThreshold();
+        } else {
+            return defaultValue;
         }
-        return temperature.getThreshold();
+
     }
 
     /*
@@ -125,6 +226,7 @@ public class MyConnection {
         return false;
     }
 
+
     /*
         get current mailbox state
      */
@@ -145,18 +247,20 @@ public class MyConnection {
 
     }
 
+
     /*
        update mailbox state
     */
+    /*
     public int confirmMailbox(int houseID) throws SQLException{
         int updateCount = 0;
-        PreparedStatement pstmt = conn.prepareStatement(Confirm_Mailbox);
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_MAILBOX_CONFIRM);
         pstmt.setBoolean(1,true);
         pstmt.setInt(2,houseID);
         updateCount = pstmt.executeUpdate();
         return updateCount;
     }
-
+*/
 
     /*
         get visitors list
@@ -196,6 +300,7 @@ public class MyConnection {
         return updateCount;
 
     }
+
 
 
 }

@@ -8,65 +8,53 @@
 
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="60dp"
-        android:layout_height="53dp"
-        android:text="@string/light"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.216"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
-
-    <TextView
-        android:id="@+id/tv_light_state"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/currenthouse"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.684"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.289" />
+        app:layout_constraintVertical_bias="0.081" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tv_currHouse_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/currentLightState"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.127"
+        app:layout_constraintHorizontal_bias="0.364"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.289" />
+        app:layout_constraintVertical_bias="0.081" />
+
 
     <Switch
         android:id="@+id/sw_manual_control"
-        android:layout_width="213dp"
-        android:layout_height="28dp"
+        android:layout_width="299dp"
+        android:layout_height="wrap_content"
         android:text="Manual Control Light"
         android:textOff="Turn OFF"
         android:textOn="Turn ON"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.186"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.375" />
+        app:layout_constraintVertical_bias="0.352" />
 
     <ToggleButton
         android:id="@+id/tbt_manual_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/manualControlLight"
         android:enabled="false"
+        android:text="@string/manualControlLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.114"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="0.445" />
 </androidx.constraintlayout.widget.ConstraintLayout>

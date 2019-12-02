@@ -51,6 +51,7 @@ public class house_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(house_activity.this, light.class);
+                intent.putExtra("house_id",houseid);
                 startActivity(intent);
             }
         });
@@ -60,6 +61,7 @@ public class house_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(house_activity.this, mailbox.class);
+                intent.putExtra("house_id",houseid);
                 startActivity(intent);
             }
         });
@@ -70,6 +72,7 @@ public class house_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(house_activity.this, doorbell.class);
+                //intent.putExtra("house_id",houseid);
                 startActivity(intent);
             }
         });

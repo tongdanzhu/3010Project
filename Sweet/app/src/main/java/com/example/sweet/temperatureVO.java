@@ -23,7 +23,7 @@ public class temperatureVO {
 
 
     public double getCurrTemp() {
-        return this.getCurrTemp();
+        return this.currTemp;
     }
 
     public void setCurrTemp(double currTemp) {

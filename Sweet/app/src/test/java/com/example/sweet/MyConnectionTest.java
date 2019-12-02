@@ -1,23 +1,45 @@
 package com.example.sweet;
 
-import junit.framework.TestSuite;
-
-
 import org.junit.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class MyConnectionTest {
-
-
-    MyConnection con = new MyConnection();
-
-
+    MyConnection con=new MyConnection();
 
     @Test
-    public void Test_userExist() {
+    public void getThreshold() {
+        try {
+            assertEquals(23,con.getThreshold(1),0.05);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            assertEquals(-0.5,con.getThreshold(2),0.05);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void isThresholdExist() {
+        try {
+            assertEquals(true,con.isThresholdExist(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            assertEquals(false,con.isThresholdExist(2));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void userExist() {
         //expect true when the input is a integer
         try {
             assertEquals(true, con.userExist(1));
@@ -30,13 +52,14 @@ public class MyConnectionTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     @Test
-    public void Test_password_validation() {
+    public void password_validation() {
         //test case for correct password
         try {
-            assertEquals(true, con.password_validation("1", "123"));
+            assertEquals(true, con.password_validation("1", "11"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,8 +82,8 @@ public class MyConnectionTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
 
+    }
 
     @Test
     public void getMailboxState() {
@@ -74,30 +97,15 @@ public class MyConnectionTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     @Test
-    public void Test_threshold_exist(){
+    public void getLatestTemp() {
         try {
-            assertEquals(true,con.isThresholdExist(1));
+            assertEquals(35.4,con.getLatestTemp(1),0.05);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            assertEquals(false,con.isThresholdExist(2));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void Test_get_threshold(){
-        try {
-
-            assertEquals(28.5,con.getThreshold(1),0.2);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 }
