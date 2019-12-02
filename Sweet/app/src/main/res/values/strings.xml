@@ -4,7 +4,7 @@
     <string name="temperature">temperature</string>
     <string name="light">light</string>
     <string name="mailbox">mailbox</string>
-    <string name="doorbell">doorbell</string>
+    <string name="doorbell">Visitors List</string>
     <string name="houseid">house id</string>
     <string name="currenthouse">Current House: </string>
     <string name="currentLightState">Current Light State: </string>
@@ -13,5 +13,8 @@
     <string name="thresholdRange">Update Threshold (0 ℃-40 ℃): </string>
     <string name="manualControlLight">Manual Control Light</string>
     <string name="sweetHome">Sweet Home</string>
+    <string name="visitorText">Number of your visitors today is: </string>
+    <string name="visitorCount">TextView</string>
+    <string name="visitorInfo">visitor info here</string>
 
 </resources>

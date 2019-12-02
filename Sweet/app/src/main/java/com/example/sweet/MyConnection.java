@@ -25,7 +25,16 @@ public class MyConnection {
     // get threshold
     private static final String GET_THRESHOLD = "SELECT threshold FROM temperatureControl WHERE houseID=?";
     //get latest temperature
-    private static final String GET_LATEST_TEMP = "SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
+
+    private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
+    //get visitor information
+    private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? confirm=?";
+    //confirm the visitor list
+    private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =?";
+    //confirm the mailbox
+   // private static final String Confirm_Mailbox = "UPDATE user SET mailboxState = ? WHERE houseID = ?";
+
+   // private static final String GET_LATEST_TEMP = "SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     //insert threshold for house
     private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
     // update mailbox confirm
@@ -35,6 +44,7 @@ public class MyConnection {
 
     // get manual control
     private static final String GET_MANUAL_CONTROL = "UPDATE light SET manualControl=? WHERE houseID=?";
+
 
     private static Connection conn = null;
     private double defaultValue = -0.5;
@@ -49,10 +59,15 @@ public class MyConnection {
                 //url for app connects to remote database
                 //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
+                 //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                //String url = "jdbc:mysql://192.168.0.19:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+
+
                 //url for app connects to local database
                 String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 //url for test
+
                 //String url = "jdbc:mysql://localhost:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 String user = "root";
@@ -96,25 +111,6 @@ public class MyConnection {
         return updateCount;
     }
 
-    /*
-        get current mailbox state
-     */
-    public boolean getMailboxState(int houseID) throws SQLException {
-        Connection conn = getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(GET_MAILBOX_STATE);
-        pstmt.setInt(1, houseID);
-        ResultSet rs = pstmt.executeQuery();
-        houseVO house = new houseVO();
-        while (rs.next()) {
-            house.setMailboxState(rs.getBoolean("mailboxState"));
-        }
-        if (house.isMailboxState()) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
 
     /*
         insert new Threshold
@@ -229,6 +225,82 @@ public class MyConnection {
         }
         return false;
     }
+
+
+    /*
+        get current mailbox state
+     */
+    public boolean getMailboxState(int houseID) throws SQLException {
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(GET_MAILBOX_STATE);
+        pstmt.setInt(1, houseID);
+        ResultSet rs = pstmt.executeQuery();
+        houseVO house = new houseVO();
+        while (rs.next()) {
+            house.setMailboxState(rs.getBoolean("mailboxState"));
+        }
+        if (house.isMailboxState()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+
+    /*
+       update mailbox state
+    */
+    /*
+    public int confirmMailbox(int houseID) throws SQLException{
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_MAILBOX_CONFIRM);
+        pstmt.setBoolean(1,true);
+        pstmt.setInt(2,houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
+    }
+*/
+
+    /*
+        get visitors list
+     */
+    public List<visitorVO> getVisitorList(int houseID) throws SQLException{
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(GET_visitorList);
+        pstmt.setInt(1, houseID);
+        pstmt.setBoolean(2,false);
+        houseVO house = new houseVO();
+        List<visitorVO> visitors = new ArrayList<visitorVO>();
+        ResultSet rs = pstmt.executeQuery();
+        while(rs.next()){
+            visitorVO visitor = new visitorVO();
+            visitor.setVisitorID(rs.getInt("visitorID"));
+            visitor.setHouseID(rs.getInt("houseID"));
+            visitor.setCurrDate(rs.getString("currDate"));
+            visitor.setCurrTime(rs.getString("currTime"));
+            visitor.setConfirm(rs.getBoolean("confirm"));
+
+            visitors.add(visitor);
+        }
+        return visitors;
+    }
+
+
+    /*
+        confirm visitor
+     */
+    public int confirmVisitor(int houseID) throws SQLException{
+        int updateCount = 0;
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(Confirm_Visitors);
+        pstmt.setBoolean(1,true);
+        pstmt.setInt(2,houseID);
+        updateCount = pstmt.getUpdateCount();
+        return updateCount;
+
+    }
+
 
 
 }
