@@ -31,10 +31,7 @@ public class MyConnection {
     private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? confirm=?";
     //confirm the visitor list
     private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =?";
-    //confirm the mailbox
-   // private static final String Confirm_Mailbox = "UPDATE user SET mailboxState = ? WHERE houseID = ?";
 
-   // private static final String GET_LATEST_TEMP = "SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     //insert threshold for house
     private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
     // update mailbox confirm
@@ -46,6 +43,11 @@ public class MyConnection {
     private static final String GET_MANUAL_CONTROL = "select manualControl from lightControl where houseID =?";
     // insert default manual control
     private static final String INSERT_LIGHT_CONTROL ="INSERT INTO lightControl (houseID,manualControl,switches) VALUES (?,0,0)";
+
+    // get switch state
+    private static final String GET_SWITCH_STATE="SELECT switches FROM lightControl WHERE houseID =?";
+    // update switch state
+    private static final String UPDATE_SWITCH_STATE = "UPDATE lightControl SET switches =? WHERE houseID=?";
 
     private static Connection conn = null;
     private double defaultValue = -0.5;
@@ -84,6 +86,52 @@ public class MyConnection {
         }
 
         return conn;
+    }
+
+
+    /*
+        get switch state of light
+     */
+    public boolean getSwitches (int houseID) throws SQLException {
+        Connection conn = getConnection();
+
+        lightControlVO lightControl=new lightControlVO();
+        PreparedStatement pstmt = conn.prepareStatement(GET_SWITCH_STATE);
+        pstmt.setInt(1, houseID);
+        int updateCount = 0;
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) { // have record in the database
+            lightControl.setSwitches(rs.getBoolean("switches"));
+            if(lightControl.isSwitches()){
+                //System.out.println(lightControl.isSwitches());
+                return true;
+            }
+            else{
+                return false;
+            }
+        } else {// no manual control information, set default manual control with manual control off and switch off
+            PreparedStatement pstmt1 = conn.prepareStatement(INSERT_LIGHT_CONTROL);
+            pstmt1.setInt(1, houseID);
+            updateCount = pstmt1.executeUpdate();
+            if(updateCount!=0){
+                return false;
+            }
+            return false;
+
+        }
+    }
+
+    /*
+           update switch
+        */
+    public int updateSwitches(int houseID, boolean switches) throws SQLException {
+        Connection conn = getConnection();
+        int updateCount = 0;
+        PreparedStatement pstmt = conn.prepareStatement(UPDATE_SWITCH_STATE);
+        pstmt.setBoolean(1, switches);
+        pstmt.setInt(2, houseID);
+        updateCount = pstmt.executeUpdate();
+        return updateCount;
     }
 
     /*
