@@ -30,7 +30,7 @@ public class MyConnection {
     //get visitor information
     private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? and confirm=?";
     //confirm the visitor list
-    private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =?";
+    private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =? and currTime=? and currDate=?";
     //confirm the mailbox
    // private static final String Confirm_Mailbox = "UPDATE user SET mailboxState = ? WHERE houseID = ?";
 
@@ -291,13 +291,28 @@ public class MyConnection {
     /*
         confirm visitor
      */
-    public int confirmVisitor(int houseID) throws SQLException{
+    public int confirmVisitor(int houseID,List<visitorVO> list) throws SQLException{
         int updateCount = 0;
         Connection conn = getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(Confirm_Visitors);
-        pstmt.setBoolean(1,true);
-        pstmt.setInt(2,houseID);
-        updateCount = pstmt.getUpdateCount();
+
+
+        if(list.size()!=0){
+            for(int i=0;i<list.size();i++){
+                PreparedStatement pstmt = conn.prepareStatement(Confirm_Visitors);
+                pstmt.setBoolean(1,true);
+                pstmt.setInt(2,houseID);
+                pstmt.setString(3,list.get(i).getCurrTime());
+                pstmt.setString(4,list.get(i).getCurrDate());
+
+                updateCount = pstmt.executeUpdate();
+            }
+
+
+        }
+
+
+
+
         return updateCount;
 
     }

@@ -17,4 +17,5 @@
     <string name="visitorCount"></string>
     <string name="visitorInfo"></string>
     <string name="doorbellTitle">Visitors List</string>
+    <string name="visitorConfirmButton">confirm</string>
 </resources>

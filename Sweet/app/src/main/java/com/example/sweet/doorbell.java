@@ -5,24 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class doorbell extends AppCompatActivity {
 
     private TextView visitorsNum;
     private TextView visitorInfo;
+    private Button confirm_bt;
     private String houseid;
     private List<visitorVO> list = new ArrayList<>(); //a list of visitors
     private int i; //count the number of visitors in list.
-    private String listInfo;
-    String str[] = new String[i];
     ArrayList<String> stringArray = new ArrayList<String>();
 
     @SuppressLint("HandlerLeak")
@@ -31,6 +32,7 @@ public class doorbell extends AppCompatActivity {
         public void handleMessage(Message msg) {
 
             switch (msg.what){
+
                 case 1:
                     visitorsNum.setText(msg.obj.toString());  //display the number of visitors on the top left corner
 
@@ -39,6 +41,20 @@ public class doorbell extends AppCompatActivity {
                         visitorInfo.append(stringArray.get(j));
                         visitorInfo.append("\n");
                     }
+                    break;
+
+                case 2:
+                    //display a toast of confirmation and refresh the page
+                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    refresh();
+                    break;
+
+                case 3:
+                    //display a confirm failed msg
+                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    break;
+
+
             }
 
         }
@@ -55,6 +71,8 @@ public class doorbell extends AppCompatActivity {
          */
          visitorsNum = (TextView) findViewById(R.id.visitorCount);
          visitorInfo = (TextView) findViewById(R.id.visitorInfo);
+         confirm_bt = (Button) findViewById(R.id.visitorConfirmButton) ;
+         confirm_bt.setEnabled(Boolean.TRUE);
 
 
         /*
@@ -73,7 +91,7 @@ public class doorbell extends AppCompatActivity {
                 //get the visitors list from database
                 try {
                     Message message = handler.obtainMessage();
-                    Message message2 = handler.obtainMessage();
+
 
                     list = connection.getVisitorList(Integer.parseInt(houseid));
                     i = list.size(); //count the number of visitors in list.
@@ -98,11 +116,58 @@ public class doorbell extends AppCompatActivity {
 
 
 
+        confirm_bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MyConnection connection = new MyConnection();
+                        String s;
+
+                        //update confirm status when visitor click the confirm button
+                        try {
+                            Message message = handler.obtainMessage();
+                            list = connection.getVisitorList(Integer.parseInt(houseid));
+                            int a = connection.confirmVisitor(Integer.parseInt(houseid),list);
+
+
+                            if(a!=0){
+                                 s = "confirm";
+                                message.what = 2;
+                                message.obj = s;
+                            }else {
+                                 s = "confirm failed";
+                                message.what = 3;
+                                message.obj = s;
+                            }
 
 
 
 
+                            handler.sendMessage(message);
 
 
+                        }catch (SQLException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+                //confirm_bt.setEnabled(Boolean.TRUE);
+            }
+        });
+
+
+    }
+
+    /*
+       refresh page
+      */
+    private void refresh() {
+        finish();
+        Intent intent = new Intent(this, doorbell.class);
+        intent.putExtra("house_id", houseid);
+        startActivity(intent);
     }
 }
