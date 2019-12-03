@@ -31,10 +31,7 @@ public class MyConnection {
     private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? and confirm=?";
     //confirm the visitor list
     private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =? and currTime=? and currDate=?";
-    //confirm the mailbox
-   // private static final String Confirm_Mailbox = "UPDATE user SET mailboxState = ? WHERE houseID = ?";
 
-   // private static final String GET_LATEST_TEMP = "SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     //insert threshold for house
     private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
     // update mailbox confirm
@@ -263,7 +260,7 @@ public class MyConnection {
 */
 
     /*
-        get visitors list
+        get unconfirmed visitors list
      */
     public List<visitorVO> getVisitorList(int houseID) throws SQLException{
         Connection conn = getConnection();
@@ -295,7 +292,6 @@ public class MyConnection {
         int updateCount = 0;
         Connection conn = getConnection();
 
-
         if(list.size()!=0){
             for(int i=0;i<list.size();i++){
                 PreparedStatement pstmt = conn.prepareStatement(Confirm_Visitors);
@@ -310,13 +306,33 @@ public class MyConnection {
 
         }
 
-
-
-
         return updateCount;
 
     }
 
+    /*
+        get confirmed visitor history
+     */
+    public List<visitorVO> getHistory(int houseID) throws SQLException{
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(GET_visitorList);
+        pstmt.setInt(1,houseID);
+        pstmt.setBoolean(2,true);
 
+        //houseVO house = new houseVO();
+        List<visitorVO> visitors = new ArrayList<visitorVO>();
+        ResultSet rs = pstmt.executeQuery();
+        while(rs.next()){
+            visitorVO visitor = new visitorVO();
+            visitor.setVisitorID(rs.getInt("id"));
+            visitor.setHouseID(rs.getInt("houseID"));
+            visitor.setCurrDate(rs.getString("currDate"));
+            visitor.setCurrTime(rs.getString("currTime"));
+            visitor.setConfirm(rs.getBoolean("confirm"));
+
+            visitors.add(visitor);
+        }
+        return visitors;
+    }
 
 }

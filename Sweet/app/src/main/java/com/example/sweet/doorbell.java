@@ -21,6 +21,7 @@ public class doorbell extends AppCompatActivity {
     private TextView visitorsNum;
     private TextView visitorInfo;
     private Button confirm_bt;
+    private Button history_bt;
     private String houseid;
     private List<visitorVO> list = new ArrayList<>(); //a list of visitors
     private int i; //count the number of visitors in list.
@@ -55,6 +56,8 @@ public class doorbell extends AppCompatActivity {
                     break;
 
 
+
+
             }
 
         }
@@ -73,6 +76,8 @@ public class doorbell extends AppCompatActivity {
          visitorInfo = (TextView) findViewById(R.id.visitorInfo);
          confirm_bt = (Button) findViewById(R.id.visitorConfirmButton) ;
          confirm_bt.setEnabled(Boolean.TRUE);
+         history_bt = (Button) findViewById(R.id.history);
+         history_bt.setEnabled(Boolean.TRUE);
 
 
         /*
@@ -138,7 +143,7 @@ public class doorbell extends AppCompatActivity {
                                 message.what = 2;
                                 message.obj = s;
                             }else {
-                                 s = "confirm failed";
+                                 s = "You have no visitors";
                                 message.what = 3;
                                 message.obj = s;
                             }
@@ -157,6 +162,20 @@ public class doorbell extends AppCompatActivity {
                 //confirm_bt.setEnabled(Boolean.TRUE);
             }
         });
+
+
+        history_bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent();
+                intent.setClass(doorbell.this,visitorHistory.class);
+                intent.putExtra("house_id", houseid);
+                startActivity(intent);
+
+            }
+        });
+
 
 
     }

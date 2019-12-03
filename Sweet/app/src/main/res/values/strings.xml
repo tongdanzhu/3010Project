@@ -18,4 +18,7 @@
     <string name="visitorInfo"></string>
     <string name="doorbellTitle">Visitors List</string>
     <string name="visitorConfirmButton">confirm</string>
+    <string name="history_bt">History</string>
+    <string name="historyTitle">Visitor History</string>
+    <string name="historyInfo"></string>
 </resources>
