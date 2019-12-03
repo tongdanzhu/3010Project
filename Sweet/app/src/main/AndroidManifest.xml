@@ -21,6 +21,7 @@
         <activity android:name=".light"></activity>
         <activity android:name=".doorbell"></activity>
         <activity android:name=".mailbox"></activity>
+        <activity android:name=".visitorHistory"></activity>
 
     </application>
 

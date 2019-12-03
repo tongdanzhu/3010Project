@@ -6,6 +6,7 @@ public class visitorVO {
     private String currDate;
     private String currTime;
     private boolean confirm;
+    //private int confirm;
     public int getVisitorID() {
         return visitorID;
     }
@@ -31,10 +32,13 @@ public class visitorVO {
         this.currTime = currTime;
     }
     public boolean isConfirm() {
+
         return confirm;
     }
-    public void setConfirm(boolean confirm) {
+    public void setConfirm(Boolean confirm) {
         this.confirm = confirm;
     }
-
+    public String print_as_String(visitorVO v){
+        return currDate + "  " + currTime;
+    }
 }

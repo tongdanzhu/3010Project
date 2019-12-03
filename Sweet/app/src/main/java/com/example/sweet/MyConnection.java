@@ -28,9 +28,9 @@ public class MyConnection {
 
     private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     //get visitor information
-    private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? confirm=?";
+    private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? and confirm=?";
     //confirm the visitor list
-    private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =?";
+    private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =? and currTime=? and currDate=?";
 
     //insert threshold for house
     private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
@@ -61,18 +61,21 @@ public class MyConnection {
 
                 //url for app connects to remote database
                 //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                 String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                //String url = "jdbc:mysql://192.168.0.19:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
-                //String url = "jdbc:mysql://192.168.0.19:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 //url for app connects to local database
-                String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
+                //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 //url for test
                 //String url = "jdbc:mysql://localhost:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
 
                 String user = "root";
+
                 String password = "sysc3010!";//password for local database
                 //String password = "password"; //password for remote database
+
 
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(url);
@@ -332,7 +335,7 @@ public class MyConnection {
 
 
     /*
-        get visitors list
+        get unconfirmed visitors list
      */
     public List<visitorVO> getVisitorList(int houseID) throws SQLException{
         Connection conn = getConnection();
@@ -344,7 +347,7 @@ public class MyConnection {
         ResultSet rs = pstmt.executeQuery();
         while(rs.next()){
             visitorVO visitor = new visitorVO();
-            visitor.setVisitorID(rs.getInt("visitorID"));
+            visitor.setVisitorID(rs.getInt("id"));
             visitor.setHouseID(rs.getInt("houseID"));
             visitor.setCurrDate(rs.getString("currDate"));
             visitor.setCurrTime(rs.getString("currTime"));
@@ -356,20 +359,55 @@ public class MyConnection {
     }
 
 
+
     /*
         confirm visitor
      */
-    public int confirmVisitor(int houseID) throws SQLException{
+    public int confirmVisitor(int houseID,List<visitorVO> list) throws SQLException{
         int updateCount = 0;
         Connection conn = getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(Confirm_Visitors);
-        pstmt.setBoolean(1,true);
-        pstmt.setInt(2,houseID);
-        updateCount = pstmt.getUpdateCount();
+
+        if(list.size()!=0){
+            for(int i=0;i<list.size();i++){
+                PreparedStatement pstmt = conn.prepareStatement(Confirm_Visitors);
+                pstmt.setBoolean(1,true);
+                pstmt.setInt(2,houseID);
+                pstmt.setString(3,list.get(i).getCurrTime());
+                pstmt.setString(4,list.get(i).getCurrDate());
+
+                updateCount = pstmt.executeUpdate();
+            }
+
+
+        }
+
         return updateCount;
 
     }
 
+    /*
+        get confirmed visitor history
+     */
+    public List<visitorVO> getHistory(int houseID) throws SQLException{
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(GET_visitorList);
+        pstmt.setInt(1,houseID);
+        pstmt.setBoolean(2,true);
 
+        //houseVO house = new houseVO();
+        List<visitorVO> visitors = new ArrayList<visitorVO>();
+        ResultSet rs = pstmt.executeQuery();
+        while(rs.next()){
+            visitorVO visitor = new visitorVO();
+            visitor.setVisitorID(rs.getInt("id"));
+            visitor.setHouseID(rs.getInt("houseID"));
+            visitor.setCurrDate(rs.getString("currDate"));
+            visitor.setCurrTime(rs.getString("currTime"));
+            visitor.setConfirm(rs.getBoolean("confirm"));
+
+            visitors.add(visitor);
+        }
+        return visitors;
+    }
 
 }
