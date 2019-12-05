@@ -1,6 +1,6 @@
 package com.example.sweet;
 /*
- * Light control details
+ *  Light control details
  * @author: Tongdan Zhu
  */
 public class lightControlVO {

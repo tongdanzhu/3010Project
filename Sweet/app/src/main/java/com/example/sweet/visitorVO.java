@@ -1,6 +1,6 @@
 package com.example.sweet;
 /*
- * Construction of a visitor
+ *  Construction of a visitor
  * @author: Lixuan Luo
  */
 public class visitorVO {

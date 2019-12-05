@@ -1,6 +1,6 @@
 package com.example.sweet;
 /*
- * Construction of a house.
+ *  Construction of a house.
  */
 public class houseVO {
     private int houseID;

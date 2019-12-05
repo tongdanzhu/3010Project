@@ -1,6 +1,6 @@
 package com.example.sweet;
 /*
- * Temperature control details
+ *  Temperature control details
  * @author: Tongdan Zhu
  */
 

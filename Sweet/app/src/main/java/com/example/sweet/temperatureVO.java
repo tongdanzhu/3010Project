@@ -1,6 +1,6 @@
 package com.example.sweet;
 /*
- * Construction of temperature information
+ *  Construction of temperature information
  * @author: Tongdan Zhu
  */
 import java.util.Calendar;

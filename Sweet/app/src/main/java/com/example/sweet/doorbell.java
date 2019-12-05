@@ -1,6 +1,6 @@
 package com.example.sweet;
 /*
- * This file is to design a user interface of visitors information.
+ *  This file is to design a user interface of visitors information.
  * This file is a sub-layer of the "bt_doorbell" button in "house_activity.java"
  * @author: Lixuan Luo
  */

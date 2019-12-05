@@ -1,6 +1,6 @@
 package com.example.sweet;
 /*
- * An user interface for loggin.
+ *  An user interface for loggin.
  * @author: Tongdan Zhu
  */
 import androidx.appcompat.app.AppCompatActivity;
