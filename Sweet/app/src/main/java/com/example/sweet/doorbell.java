@@ -27,6 +27,7 @@ public class doorbell extends AppCompatActivity {
     private int i; //count the number of visitors in list.
     ArrayList<String> stringArray = new ArrayList<String>();
 
+    /* message handler */
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
@@ -48,16 +49,12 @@ public class doorbell extends AppCompatActivity {
                     //display a toast of confirmation and refresh the page
                     Toast.makeText(getApplicationContext(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     refresh();
-
-
                     break;
 
                 case 3:
                     //display a confirm failed msg
                     Toast.makeText(getApplicationContext(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
-
                     break;
-
 
             }
 
@@ -87,7 +84,7 @@ public class doorbell extends AppCompatActivity {
         Intent getIntent = getIntent();
         houseid = getIntent.getStringExtra("house_id");
 
-
+        /* new a thread to handle the database accessing */
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -96,8 +93,6 @@ public class doorbell extends AppCompatActivity {
                 //get the visitors list from database
                 try {
                     Message message = handler.obtainMessage();
-
-
                     list = connection.getVisitorList(Integer.parseInt(houseid));
                     i = list.size(); //count the number of visitors in list.
                     String s = Integer.toString(i);
@@ -119,7 +114,9 @@ public class doorbell extends AppCompatActivity {
             }
         }).start();
 
-
+        /*
+        confirm button listener
+         */
         confirm_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,8 +132,6 @@ public class doorbell extends AppCompatActivity {
                             Message message = handler.obtainMessage();
                             list = connection.getVisitorList(Integer.parseInt(houseid));
                             int a = connection.confirmVisitor(Integer.parseInt(houseid), list);
-
-
                             if (a != 0) {
                                 s = "confirm";
                                 message.what = 2;
@@ -147,20 +142,19 @@ public class doorbell extends AppCompatActivity {
                                 message.obj = s;
                             }
 
-
                             handler.sendMessage(message);
-
 
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
                     }
                 }).start();
-                //confirm_bt.setEnabled(Boolean.TRUE);
             }
         });
 
-
+        /*
+        history page listener
+        */
         history_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

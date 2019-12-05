@@ -63,6 +63,7 @@ public class mailbox extends AppCompatActivity {
             initial elements
          */
         tv_new_letter = (TextView) findViewById(R.id.tv_new_letter);
+        // button for confirmation of receiving a new letter
         bt_confirm = (Button) findViewById(R.id.bt_confirm);
         bt_confirm.setEnabled(Boolean.FALSE);
         //text view for current house
@@ -77,7 +78,7 @@ public class mailbox extends AppCompatActivity {
         tv_currHouse.setText(houseid);
 
 
-        //check database whether having a new letter
+        // new a thread to check database whether having a new letter
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -104,12 +105,12 @@ public class mailbox extends AppCompatActivity {
             }
         }).start();
 
-
+        // confirm button listener
         bt_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //confirm new letter message
+                // new a thread to confirm new letter message
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -135,8 +136,7 @@ public class mailbox extends AppCompatActivity {
                     }
                 }).start();
 
-                bt_confirm.setEnabled(Boolean.FALSE);
-                //tv_new_letter.setText(no_new_letter);
+                bt_confirm.setEnabled(Boolean.FALSE); //disable the button when the confirm is received
             }
         });
 
@@ -151,7 +151,9 @@ public class mailbox extends AppCompatActivity {
         intent.putExtra("house_id", houseid);
         startActivity(intent);
     }
-
+    /*
+     *   display message on screen
+     * */
     private void toast(String s) {
         Toast.makeText(getApplication(), s, Toast.LENGTH_SHORT).show();
     }

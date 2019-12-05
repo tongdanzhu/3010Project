@@ -72,7 +72,7 @@ public class MyConnection {
                 //String password = "sysc3010!";//password for local database
                 String password = "password"; //password for remote database
 
-
+                // get connection
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(url);
                 System.out.println(user);
@@ -102,13 +102,13 @@ public class MyConnection {
         if (rs.next()) { // have record in the database
             lightControl.setSwitches(rs.getBoolean("switches"));
             if(lightControl.isSwitches()){
-                //System.out.println(lightControl.isSwitches());
+
                 return true;
             }
             else{
                 return false;
             }
-        } else {// no manual control information, set default manual control with manual control off and switch off
+        } else {// no manual control information, set default manual control with default manual control off and switch off
             PreparedStatement pstmt1 = conn.prepareStatement(INSERT_LIGHT_CONTROL);
             pstmt1.setInt(1, houseID);
             updateCount = pstmt1.executeUpdate();
@@ -164,7 +164,6 @@ public class MyConnection {
         }
     }
 
-
     /*
         update manual control
      */
@@ -190,7 +189,6 @@ public class MyConnection {
         updateCount = pstmt.executeUpdate();
         return updateCount;
     }
-
 
     /*
         insert new Threshold
@@ -229,13 +227,11 @@ public class MyConnection {
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
             temperature.setCurrTemp(rs.getDouble("currTemp"));
-
             return temperature.getCurrTemp();
         } else {
             return defaultValue;
         }
     }
-
 
     /*
         get the threshold of the certain house id from the database
@@ -248,7 +244,6 @@ public class MyConnection {
 
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
-
             temperature.setThreshold(rs.getDouble("threshold"));
             return temperature.getThreshold();
         } else {
@@ -306,7 +301,6 @@ public class MyConnection {
         return false;
     }
 
-
     /*
         get current mailbox state
      */
@@ -326,9 +320,6 @@ public class MyConnection {
         }
 
     }
-
-
-
 
     /*
         get unconfirmed visitors list
@@ -353,8 +344,6 @@ public class MyConnection {
         }
         return visitors;
     }
-
-
 
     /*
         confirm visitor

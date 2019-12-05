@@ -36,7 +36,7 @@ public class temperature extends AppCompatActivity {
     private static final int NO_TEMP_INFO = 5;
     private static final int LATEST_TEMP = 6;
 
-    private double defaultValue = -0.5;
+    private double defaultValue = -0.5; //default value for exceptions
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -82,8 +82,8 @@ public class temperature extends AppCompatActivity {
         tv_currTemp = (TextView) findViewById(R.id.tv_currTemp); // text view for latest temperature
         bt_set_threshold = (Button) findViewById(R.id.bt_set_threshold); //button for setting threshold
         et_set_threshold = (EditText) findViewById(R.id.et_set_threshold); // edit text for inputting threshold
-        tv_currHouse = (TextView) findViewById(R.id.tv_currHouse);
-        tv_threshold = (TextView) findViewById(R.id.tv_threshold);
+        tv_currHouse = (TextView) findViewById(R.id.tv_currHouse); // text view for current house
+        tv_threshold = (TextView) findViewById(R.id.tv_threshold); // text view for the threshold
 
         // receive parameter from previous page
         Intent getIntent = getIntent();
@@ -107,29 +107,27 @@ public class temperature extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (TextUtils.isEmpty(et_set_threshold.getText())) {
-                    bt_set_threshold.setEnabled(Boolean.FALSE);
+                    bt_set_threshold.setEnabled(Boolean.FALSE); // disable the button when there are no input for threshold
                     return;
                 } else {
-                    bt_set_threshold.setEnabled(Boolean.TRUE);
+                    bt_set_threshold.setEnabled(Boolean.TRUE); // enable the button when there are input for threshold
                 }
             }
         });
 
-        //display threhold where the house id is the one received from previous page
+        // new a thread display threhold for the house id which is the one received from previous page
         new Thread(new Runnable() {
             @Override
             public void run() {
                 MyConnection conn = new MyConnection();
                 try {
-                    //boolean isThresholdExist = conn.isThresholdExist(Integer.parseInt(houseid));
+
                     Message message = handler.obtainMessage();
-
-                    if (conn.getThreshold(Integer.parseInt(houseid)) == defaultValue) {
-
+                    if (conn.getThreshold(Integer.parseInt(houseid)) == defaultValue) { // to check whether the threshold is exist in database
                         String s = "Threshold is not exist";
                         message.what = THRESHOLD_NOT_EXIST;
                         message.obj = s;
-                    } else {
+                    } else { // the threshold exist in database
 
                         String s = conn.getThreshold(Integer.parseInt(houseid)) + " ℃";
                         message.what = THRESHOLD_EXIST;
@@ -144,7 +142,7 @@ public class temperature extends AppCompatActivity {
         }).start();
 
 
-        //display latest temperature where the house id is the one received from previous page
+        //display latest temperature for the house id which is the one received from previous page
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -152,12 +150,12 @@ public class temperature extends AppCompatActivity {
                 Message message = handler.obtainMessage();
                 try {
                     double latestTemp = conn.getLatestTemp(Integer.parseInt(houseid));
-                    if (latestTemp == defaultValue) {
+                    if (latestTemp == defaultValue) { // obtain the latest temperature value, if there are no data in database
                         String s = "No current temperature information.";
                         message.what = NO_TEMP_INFO;
                         message.obj = s;
 
-                    } else {
+                    } else { // obtain the latest temperature value
                         String s = latestTemp + " ℃";
                         message.what = LATEST_TEMP;
                         message.obj = s;
@@ -175,10 +173,11 @@ public class temperature extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String setThreshold = et_set_threshold.getText().toString();
-                if (!isThresholdValid(setThreshold) || !isThresholdisDigit(setThreshold)) {//if the threshold is not valid
+                if (!isThresholdValid(setThreshold) || !isThresholdisDigit(setThreshold)) {//if the threshold is not valid number
                     toast("the threshold must be in range of 0C to 40C");
                     bt_set_threshold.setEnabled(Boolean.FALSE);
                 } else {
+                    // new a thread to update the threshold that user input to the database
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

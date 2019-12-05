@@ -17,9 +17,7 @@ import java.sql.SQLException;
 
 public class light extends AppCompatActivity {
 
-    private TextView tv_light_state;
     private Switch sw_manual_control;
-    private lightControlVO light;
     private ToggleButton tbt_manual_control;
     private TextView tv_currHouse;
 
@@ -36,6 +34,7 @@ public class light extends AppCompatActivity {
     private static final int MANUAL_CONTROL_OFF_SWITCH_ON = 11;
     private String houseid;
 
+    /* message handler */
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         @Override
@@ -85,7 +84,7 @@ public class light extends AppCompatActivity {
                     toast(msg.obj.toString());
                     break;
                 case MANUAL_CONTROL_OFF_SWITCH_ON:
-                   
+
                     sw_manual_control.setChecked(Boolean.FALSE);
                     tbt_manual_control.setChecked(Boolean.TRUE);
                     tbt_manual_control.setEnabled(Boolean.FALSE);
@@ -117,8 +116,6 @@ public class light extends AppCompatActivity {
         //display current house id
         tv_currHouse.setText(houseid);
 
-
-        light = new lightControlVO();
 
         /*
             initial the state of manual control switch
@@ -316,6 +313,9 @@ public class light extends AppCompatActivity {
 
     }
 
+    /*
+     *   display message on screen
+     * */
     private void toast(String s) {
         Toast.makeText(getApplication(), s, Toast.LENGTH_SHORT).show();
     }
