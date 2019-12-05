@@ -1,5 +1,7 @@
 package com.example.sweet;
-
+/*
+ * Construction of a visitor
+ */
 public class visitorVO {
     private int visitorID;
     private int houseID;
