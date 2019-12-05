@@ -1,5 +1,9 @@
 package com.example.sweet;
-
+/*
+ * This file is to design a user interface of visitors information.
+ * This file is a sub-layer of the "bt_doorbell" button in "house_activity.java"
+ * @author: Lixuan Luo
+ */
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class doorbell extends AppCompatActivity {
 
