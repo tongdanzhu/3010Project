@@ -76,7 +76,7 @@ public class visitorHistory extends AppCompatActivity {
                         //print the list of visitors
                         for(int n=0;n<i;n++){
                             visitorVO v = list.get(n);
-                            stringArray.add("visitor " + Integer.toString(n+1) + ": " + v.print_as_String(v));
+                            stringArray.add("visitor " + Integer.toString(n+1) + " :  "+ v.print_as_String(v));
                         }
 
                         handler.sendMessage(message);

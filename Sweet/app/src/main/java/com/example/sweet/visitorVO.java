@@ -6,7 +6,7 @@ public class visitorVO {
     private String currDate;
     private String currTime;
     private boolean confirm;
-    //private int confirm;
+
     public int getVisitorID() {
         return visitorID;
     }
