@@ -1,5 +1,8 @@
 package com.example.sweet;
-
+/*
+ * Light control details
+ * @author: Tongdan Zhu
+ */
 public class lightControlVO {
     private int houseID;
     private boolean manualControl;

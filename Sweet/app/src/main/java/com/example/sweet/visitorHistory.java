@@ -20,7 +20,7 @@ import java.util.List;
 public class visitorHistory extends AppCompatActivity {
 
     //private TextView num;
-    private TextView info;
+    private TextView info; //visitor history information
     private String houseid;
     private List<visitorVO> list = new ArrayList<>(); //a list of visitors
     private int i; //count the number of visitors in list.
@@ -33,8 +33,6 @@ public class visitorHistory extends AppCompatActivity {
             switch (msg.what) {
 
                 case 1:
-                    //num.setText(msg.obj.toString());  //display the number of visitors on the top left corner
-
                     //print visitors' visit date and time
                     for (int j = 0; j < stringArray.size(); j++) {
                         info.append(stringArray.get(j));
@@ -51,16 +49,20 @@ public class visitorHistory extends AppCompatActivity {
             setContentView(R.layout.visitor_history);
 
             /*
-            initial elements
+             initial elements
             */
             info = (TextView) findViewById(R.id.historyInfo);
 
+
             /*
-            receive parameter from previous page
+             receive parameter from previous page
             */
             Intent getIntent = getIntent();
             houseid = getIntent.getStringExtra("house_id");
 
+            /*
+                Access the visitor history info. in the database
+             */
             new Thread(new Runnable() {
 
                 @Override
@@ -74,10 +76,10 @@ public class visitorHistory extends AppCompatActivity {
                         list = connection.getHistory(Integer.parseInt(houseid));
                         i = list.size(); //count the number of visitors in list.
                         message.what = 1;
+
                         //print the list of visitors
                         for(int n=0;n<i;n++){
                             visitorVO v = list.get(n);
-
                             stringArray.add("visitor " + v.getVisitorID() + ": " + v.print_as_String(v));
                         }
 
