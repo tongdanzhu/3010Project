@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyConnection {
-    /*
-        mysql statements
-     */
+    /* mysql statements */
     // check whether the combination of house id and password are correct
     private static final String USER_VALIDATION = "SELECT * FROM user WHERE houseID=? and password=?";
     // check whether the house id exists in database
@@ -24,15 +22,15 @@ public class MyConnection {
     private static final String UPDATE_THRESHOLD = "UPDATE temperatureControl SET threshold =? WHERE houseID =?";
     // get threshold
     private static final String GET_THRESHOLD = "SELECT threshold FROM temperatureControl WHERE houseID=?";
-    //get latest temperature
+    // get latest temperature
 
     private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
-    //get visitor information
+    // get visitor information
     private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? and confirm=?";
-    //confirm the visitor list
+    // confirm the visitor list
     private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =? and currTime=? and currDate=?";
 
-    //insert threshold for house
+    // insert threshold for house
     private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
     // update mailbox confirm
     private static final String UPDATE_MAILBOX_CONFIRM = "UPDATE user SET mailboxState=? WHERE houseID=?;";
@@ -60,15 +58,7 @@ public class MyConnection {
                 Class.forName("com.mysql.jdbc.Driver");
 
                 //url for app connects to remote database
-                //String url = "jdbc:mysql://172.20.10.10:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-
-                 //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-                //String url = "jdbc:mysql://192.168.0.19:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-
-
-                 //String url = "jdbc:mysql://10.0.2.2:3306/sysc3010?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
                 String url = "jdbc:mysql://192.168.43.112:3306/sysc?useSSL=false&useUnicode = true&characterEncoding = utf-8&serverTimezone = GMT";
-
 
 
                 //url for app connects to local database
@@ -79,8 +69,8 @@ public class MyConnection {
 
                 String user = "root";
 
-                String password = "sysc3010!";//password for local database
-                //String password = "password"; //password for remote database
+                //String password = "sysc3010!";//password for local database
+                String password = "password"; //password for remote database
 
 
                 conn = DriverManager.getConnection(url, user, password);

@@ -32,13 +32,13 @@ public class doorbell extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
 
-            switch (msg.what){
+            switch (msg.what) {
 
                 case 1:
                     visitorsNum.setText(msg.obj.toString());  //display the number of visitors on the top left corner
 
                     //print visitors' visit date and time
-                    for(int j=0; j<stringArray.size();j++){
+                    for (int j = 0; j < stringArray.size(); j++) {
                         visitorInfo.append(stringArray.get(j));
                         visitorInfo.append("\n");
                     }
@@ -46,16 +46,17 @@ public class doorbell extends AppCompatActivity {
 
                 case 2:
                     //display a toast of confirmation and refresh the page
-                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     refresh();
+
+
                     break;
 
                 case 3:
                     //display a confirm failed msg
-                    Toast.makeText(getApplicationContext(),msg.obj.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
+
                     break;
-
-
 
 
             }
@@ -72,12 +73,12 @@ public class doorbell extends AppCompatActivity {
         /*
             initial elements
          */
-         visitorsNum = (TextView) findViewById(R.id.visitorCount);
-         visitorInfo = (TextView) findViewById(R.id.visitorInfo);
-         confirm_bt = (Button) findViewById(R.id.visitorConfirmButton) ;
-         confirm_bt.setEnabled(Boolean.TRUE);
-         history_bt = (Button) findViewById(R.id.history);
-         history_bt.setEnabled(Boolean.TRUE);
+        visitorsNum = (TextView) findViewById(R.id.visitorCount);
+        visitorInfo = (TextView) findViewById(R.id.visitorInfo);
+        confirm_bt = (Button) findViewById(R.id.visitorConfirmButton);
+        confirm_bt.setEnabled(Boolean.TRUE);
+        history_bt = (Button) findViewById(R.id.history);
+        history_bt.setEnabled(Boolean.TRUE);
 
 
         /*
@@ -85,7 +86,6 @@ public class doorbell extends AppCompatActivity {
         */
         Intent getIntent = getIntent();
         houseid = getIntent.getStringExtra("house_id");
-
 
 
         new Thread(new Runnable() {
@@ -105,9 +105,9 @@ public class doorbell extends AppCompatActivity {
                     message.obj = s;
 
                     //print the list of visitors
-                    for(int n=0;n<i;n++){
-                      visitorVO v = list.get(n);
-                      stringArray.add("visitor " + Integer.toString(n+1) + ": " + v.print_as_String(v));
+                    for (int n = 0; n < i; n++) {
+                        visitorVO v = list.get(n);
+                        stringArray.add("visitor " + Integer.toString(n + 1) + ": " + v.print_as_String(v));
                     }
 
                     handler.sendMessage(message);
@@ -118,7 +118,6 @@ public class doorbell extends AppCompatActivity {
 
             }
         }).start();
-
 
 
         confirm_bt.setOnClickListener(new View.OnClickListener() {
@@ -135,26 +134,24 @@ public class doorbell extends AppCompatActivity {
                         try {
                             Message message = handler.obtainMessage();
                             list = connection.getVisitorList(Integer.parseInt(houseid));
-                            int a = connection.confirmVisitor(Integer.parseInt(houseid),list);
+                            int a = connection.confirmVisitor(Integer.parseInt(houseid), list);
 
 
-                            if(a!=0){
-                                 s = "confirm";
+                            if (a != 0) {
+                                s = "confirm";
                                 message.what = 2;
                                 message.obj = s;
-                            }else {
-                                 s = "You have no visitors";
+                            } else {
+                                s = "You have no visitors";
                                 message.what = 3;
                                 message.obj = s;
                             }
 
 
-
-
                             handler.sendMessage(message);
 
 
-                        }catch (SQLException e){
+                        } catch (SQLException e) {
                             e.printStackTrace();
                         }
                     }
@@ -169,13 +166,12 @@ public class doorbell extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.setClass(doorbell.this,visitorHistory.class);
+                intent.setClass(doorbell.this, visitorHistory.class);
                 intent.putExtra("house_id", houseid);
                 startActivity(intent);
 
             }
         });
-
 
 
     }
