@@ -1,5 +1,8 @@
 package com.example.sweet;
-
+/*
+ * Construction of temperature information
+ * @author: Tongdan Zhu
+ */
 import java.util.Calendar;
 
 public class temperatureVO {

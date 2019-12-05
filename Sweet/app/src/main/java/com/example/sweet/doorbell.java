@@ -23,10 +23,10 @@ import java.util.List;
 
 public class doorbell extends AppCompatActivity {
 
-    private TextView visitorsNum;
-    private TextView visitorInfo;
-    private Button confirm_bt;
-    private Button history_bt;
+    private TextView visitorsNum; //visitor numbers
+    private TextView visitorInfo; // visitor information
+    private Button confirm_bt; //confirm button
+    private Button history_bt; //history button
     private String houseid;
     private List<visitorVO> list = new ArrayList<>(); //a list of visitors
     private int i; //count the number of visitors in list.
@@ -57,7 +57,7 @@ public class doorbell extends AppCompatActivity {
                     break;
 
                 case 3:
-                    //display a confirm failed msg
+                    //display a confirm failed msg if there are on visitors to confirm
                     Toast.makeText(getApplicationContext(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
                     break;
 
@@ -84,7 +84,7 @@ public class doorbell extends AppCompatActivity {
 
 
         /*
-        receive parameter from previous page
+         receive parameter from previous page
         */
         Intent getIntent = getIntent();
         houseid = getIntent.getStringExtra("house_id");
@@ -137,11 +137,11 @@ public class doorbell extends AppCompatActivity {
                             Message message = handler.obtainMessage();
                             list = connection.getVisitorList(Integer.parseInt(houseid));
                             int a = connection.confirmVisitor(Integer.parseInt(houseid), list);
-                            if (a != 0) {
+                            if (a != 0) { // confirm successfully
                                 s = "confirm";
                                 message.what = 2;
                                 message.obj = s;
-                            } else {
+                            } else { //confirm failed
                                 s = "You have no visitors";
                                 message.what = 3;
                                 message.obj = s;
@@ -158,14 +158,14 @@ public class doorbell extends AppCompatActivity {
         });
 
         /*
-        history page listener
+         history page listener
         */
         history_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.setClass(doorbell.this, visitorHistory.class);
+                intent.setClass(doorbell.this, visitorHistory.class); //Change to "visitorHistory" page
                 intent.putExtra("house_id", houseid);
                 startActivity(intent);
 
@@ -180,7 +180,7 @@ public class doorbell extends AppCompatActivity {
       */
     private void refresh() {
         finish();
-        Intent intent = new Intent(this, doorbell.class);
+        Intent intent = new Intent(this, doorbell.class); //refresh
         intent.putExtra("house_id", houseid);
         startActivity(intent);
     }
