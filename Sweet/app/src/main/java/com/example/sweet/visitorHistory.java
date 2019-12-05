@@ -69,14 +69,12 @@ public class visitorHistory extends AppCompatActivity {
 
                         list = connection.getHistory(Integer.parseInt(houseid));
                         i = list.size(); //count the number of visitors in list.
-                        //String s = Integer.toString(i);
                         message.what = 1;
-                        //message.obj = s;
-
                         //print the list of visitors
                         for(int n=0;n<i;n++){
                             visitorVO v = list.get(n);
-                            stringArray.add("visitor " + Integer.toString(n+1) + ": " + v.print_as_String(v));
+
+                            stringArray.add("visitor " + v.getVisitorID() + ": " + v.print_as_String(v));
                         }
 
                         handler.sendMessage(message);

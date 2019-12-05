@@ -26,14 +26,14 @@ public class MyConnection {
 
     private static final String GET_LATEST_TEMP ="SELECT * FROM temperature WHERE houseID=? and currDate=curDate() ORDER BY currTime desc";
     // get visitor information
-    private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? and confirm=?";
+    private static final String GET_visitorList = "SELECT * FROM visitor WHERE houseID=? and confirm=? ORDER BY id desc";
     // confirm the visitor list
     private static final String Confirm_Visitors = "UPDATE visitor SET confirm =? WHERE houseID =? and currTime=? and currDate=?";
 
     // insert threshold for house
     private static final String INSERT_THRESHOLD = "INSERT INTO temperatureControl (houseID, threshold, fanState) VALUES (?,?,0)";
     // update mailbox confirm
-    private static final String UPDATE_MAILBOX_CONFIRM = "UPDATE user SET mailboxState=? WHERE houseID=?;";
+    private static final String UPDATE_MAILBOX_CONFIRM = "UPDATE user SET mailboxState=? WHERE houseID=?";
     // update manual control
     private static final String UPDATE_MANUAL_CONTROL = "UPDATE lightControl SET manualControl=? WHERE houseID=?";
 
