@@ -77,11 +77,19 @@ public class visitorHistory extends AppCompatActivity {
                         i = list.size(); //count the number of visitors in list.
                         message.what = 1;
 
-                        //print the list of visitors
-                        for(int n=0;n<i;n++){
-                            visitorVO v = list.get(n);
-                            stringArray.add("visitor " + v.getVisitorID() + ": " + v.print_as_String(v));
+                        if(i==0){ // no visitors history
+
+                            stringArray.add("No visitors");
+
+                        }else{ //i!=0
+
+                            //print the list of visitors
+                            for(int n=0;n<i;n++){
+                                visitorVO v = list.get(n);
+                                stringArray.add("visitor " + v.getVisitorID() + ": " + v.print_as_String(v));
+                            }
                         }
+
 
                         handler.sendMessage(message);
 
