@@ -30,9 +30,9 @@
 *
 *	Software Part:
 *	1. Run "Sweet" in Android studio
-*	2. In app, after you log in, you have privileges:
-*	   to control the temperature using the temperature button; 
-*	   to control the light using the light button; 
-*	   to confirm your mail using the mailbox button; 
-*	   to confirm your visitors using the doorbell button.
+*	2. In app, after you log in, you have privileges to:
+*	   control the temperature using the temperature button; 
+*	   control the light using the light button; 
+*	   confirm your mail using the mailbox button; 
+*	   confirm your visitors using the doorbell button.
 *----------------------------------------------------------------------------
