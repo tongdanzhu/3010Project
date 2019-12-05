@@ -1,5 +1,10 @@
 package com.example.sweet;
 
+/*
+ *  Construction of a visitor
+ * @author: Lixuan Luo
+ */
+
 public class visitorVO {
     private int visitorID;
     private int houseID;

@@ -1,5 +1,10 @@
 package com.example.sweet;
 
+/*
+ *  An user interface for light.
+ * @author: Tongdan Zhu
+ */
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;

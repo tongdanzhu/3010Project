@@ -1,4 +1,9 @@
 package com.example.sweet;
+/*
+ *  Build the connection between Android app and database.
+ * Operations perform on the database.
+ * @author: Tongdan Zhu, Lixuan Luo
+ */
 
 import java.sql.Connection;
 import java.sql.DriverManager;

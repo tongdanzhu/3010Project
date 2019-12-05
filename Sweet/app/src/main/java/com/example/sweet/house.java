@@ -1,5 +1,12 @@
 package com.example.sweet;
+<<<<<<< HEAD
 
+=======
+/*
+ *  An user interface for loggin.
+ * @author: Tongdan Zhu
+ */
+>>>>>>> lixuanluo
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;

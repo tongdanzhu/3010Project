@@ -1,5 +1,10 @@
 package com.example.sweet;
 
+/*
+ *  This file is an user interface for mailbox.
+ * @author: Tongdan Zhu
+ */
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;

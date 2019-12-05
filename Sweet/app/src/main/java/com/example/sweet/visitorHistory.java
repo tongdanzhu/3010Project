@@ -1,5 +1,11 @@
 package com.example.sweet;
 
+/*
+ *  This file is to design an user interface for the confirmed history of visitors.
+ * This file is a sub-layer of the "history_bt" button in "doorbell.java"
+ * @author: Lixuan Luo
+ */
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
