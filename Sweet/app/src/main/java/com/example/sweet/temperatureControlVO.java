@@ -1,8 +1,5 @@
 package com.example.sweet;
-/*
- * Temperature control details
- * @author: Tongdan Zhu
- */
+
 
 public class temperatureControlVO {
     private int houseID;

@@ -1,8 +1,5 @@
 package com.example.sweet;
-/*
- * An user interface for all house activities.
- * @author:Tongdan Zhu
- */
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
