@@ -9,7 +9,7 @@
 *Xucheng Shi 101020641
 *---------------------------------------------------------------------
 *Components:
-*Arduino code (Folder) --Arduino sensor codes
+*Arduino code (Folder) --Arduino sensor codes and code run on raspberry pi for the serial connection
 *Sweet (Folder) --Android app codes
 *sweet-test (Folder) --Test cases for testing Android app,sensors and database
 *jar (Folder) --.jar files for Junit test
