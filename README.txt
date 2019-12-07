@@ -14,6 +14,7 @@
 *sweet-test (Folder) --Test cases for testing Android app,sensors and database
 *jar (Folder) --.jar files for Junit test
 *htdocs (Folder) --PHP codes for display statistic graphs on website 
+*Website (Folder) -- An old version of "htdocs"
 *-----------------------------------------------------------------------
 *Steps:
 *	Server Part:
