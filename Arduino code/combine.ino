@@ -6,22 +6,14 @@
 
 
 dht11 DHT11;
-const int ledPin = 2;
 const int ldrPin = A0;
 const int trigPin = 8;
 const int echoPin = 9;
 const int button = 7;
 const int buzzer = 6;
-const int fanPin = 13;
 long duration;
 int distance;
-String ledopen = "op";
-String ledclose = "cl";
-String a;
-int t;
-String an;
-int isclose = 1;
-int op;
+
 
 int intensity() {
   return analogRead(ldrPin);
@@ -55,12 +47,11 @@ int hum() {
 
 
 
-
-
-
 void setup() {
   Serial.begin(9600);
+  
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+  
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
 
   pinMode(ledPin, OUTPUT);//Set the ledPin as Output
@@ -69,9 +60,7 @@ void setup() {
 
   pinMode(button, INPUT);//Set the button as Input
 
-  pinMode(fanPin, OUTPUT);//Set buzzer as Output
-
-  pinMode(buzzer, OUTPUT);
+  pinMode(buzzer, OUTPUT);//Set buzzer as Output
 }
 
 
@@ -82,8 +71,6 @@ void loop() {
 
   //intensity sensor
   int ldrStatus = intensity();//read from sensor
-
-
   Serial.print(ldrStatus);
   Serial.print("\t");
   Serial.print(1);
@@ -92,7 +79,6 @@ void loop() {
 
 
   //distance sensor
-  // Prints the distance on the Serial Monitor
   distance = distances();
   if (distance <5){
     Serial.print(1);
@@ -100,20 +86,19 @@ void loop() {
     Serial.print(0);
   }
   Serial.print("\t");
+  Serial.print(distance);
+  Serial.print("\t");
   delay(50);
 
 
   //temp. and hum. sensor
-  //print out the humidity
-  Serial.print(distance);
-  Serial.print("\t");
   //print out the temperature
   t = temp();
   Serial.print(t);
   Serial.print("\t");
-
   delay(50);
 
+  
   //Botton
   //if button be pressed, turn on buzzer
   if (digitalRead(button) == HIGH) {
